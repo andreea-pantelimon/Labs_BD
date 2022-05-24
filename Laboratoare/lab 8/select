@@ -1,0 +1,50 @@
+select
+den_dep "Den_dep",
+sal as "Sal_med_sefi",
+a.nume "Nume_ang",
+a.salariu "Salariu_ang"
+from angajati a
+natural join departamente
+where
+(sal) = (select avg(salariu)
+			from angajati
+			where id_ang in (select id_sef from angajati)
+			group by id_dep)
+and
+a.salariu > (select avg(salariu)
+			from angajati
+			where id_ang in (select id_sef from angajati)
+			group by id_dep) / 2;
+
+-------------------------------------------------------------
+select d.den_dep "Den_dep",
+	sal_med_sefi "Sal_med_sefi",
+	a.nume "Nume_ang",
+	a.salariu "Salariu_ang"
+from departamente d, angajati a
+where a.id_dep = d.den_dep and
+	(a.id_dep, sal_med_sefi) in (select avg(salariu)
+			from angajati
+			where id_ang in (select id_sef from angajati)
+			group by id_dep) and
+	sal_med_sefi < a.salariu * 2;
+
+-----------------------------------------------------------
+select 
+b.den_dep Den_dep,
+(select round(avg(c.salariu) / 2, 0)
+from (select distinct(q.id_ang), q.id_dep, q.salariu
+from angajati q,
+angajati e
+where q.id_ang = e.id_sef) c
+where c.id_dep = a.id_dep) sal_med_sefi, a.nume Nume_ang, a.salariu salariu_ang
+from angajati a,
+departamente b
+where a.id_dep = b.id_dep and
+a.salariu > (select round(avg(c.salariu) / 2, 0)
+from (select distinct(q.id_ang), q.id_dep, q.salariu
+from angajati q,
+angajati e
+where q.id_ang = e.id_sef) c
+where c.id_dep = a.id_dep);
+------------------------------------------------------------

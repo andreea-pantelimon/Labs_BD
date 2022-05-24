@@ -1,0 +1,85 @@
+select
+d.den_dep, 
+a.nume,
+a.comision,
+(select min(salariu) sal_min from angajati) "Sal_min_comp",
+(select avg(salariu) sal_med from angajati) "Sal_med_comp",
+decode (a.functie, 'PRESIDENT', 0,
+					'MANAGER', 0,
+					a.salariu) prima,
+decode(a.comision, 0, (select avg(salariu) sal_med from angajati),
+					'', (select min(salariu) sal_min from angajati),
+					a.salariu) prima
+from angajati a natural join departamente d
+group by d.den_dep, a.nume, a.comision, a.functie, a.salariu, a.comision;
+
+------------------------------------------------------
+
+select d.den_dep as "Den_depart",
+	a.nume "Nume",
+	a.comision "Comision",
+	(select min(salariu) sal_min from angajati) "Sal_min_comp",
+	(select avg(salariu) sal_med from angajati) "Sal_med_comp",
+	case
+		when a.functie = 'PRESIDENT' then 0
+		when a.functie = 'MANAGER' then 0
+		when nvl(a.comision, 0) != 0 then (select avg(salariu) sal_med from angajati)
+		when nvl(a.comision, 0) = 0 then (select min(salariu) sal_min from angajati)
+	end "Prima"
+from angajati a natural join departamente d
+group by d.den_dep, a.nume, a.comision, a.functie;
+
+-------------------------------------------------------
+
+select d.den_dep as "Den_depart",
+	a.nume "Nume",
+	nvl(a.comision, 0) "Comision",
+	min(all s.salariu) "Sal_min_comp",
+	avg(all s.salariu) "Sal_med_comp",
+	case
+		when a.functie = 'PRESIDENT' or a.functie = 'MANAGER' then 0
+		when nvl(a.comision, 0) != 0 then avg(all s.salariu)
+		when nvl(a.comision, 0) = 0 then min(all s.salariu)
+	end "Prima"
+from angajati s,
+     angajati a natural join departamente d
+group by d.den_dep, a.nume, a.comision, a.functie;
+
+---------------------------------------------------------
+Cerinta:Pentru angajatii ce au numele de lungime mai mare ca a sefului lor (daca nu au sef se considera ca indeplinesc aceasta conditie), faceti o lista cu:
+- numele departamentului in care este seful, scris cu litere mari (NUME_DEPT_SEF)
+- cate luni complete au lucrat in firma (LUNI_LUCRATE_ANG)
+- initiala numelui lor, ca litera mica (INITIALA_ANG)
+-ultima cifra a venitului lor (ULTIMA_CIFRA_SALARIU)
+Se se rezolve prin doua metode  (scripturi) distincte folosind functii SQL.
+Testarea solutiilor se va face pe tabelele EMP, DEPT si SALGRADE.
+
+Rezolvare:
+/* Varianta 1 */
+
+SELECT upper(d.dname) NUME_DEPT_SEF,
+months_between(sysdate,e1.hiredate) LUNI_LUCRATE_ANG,
+lower(substr(e1.ename, 1, 1)) INITIALA_ANG, 
+substr((e1.sal+nvl(e1.comm,0)), length((e1.sal+nvl(e1.comm,0))), 1) ULTIMA_CIFRA_SALARIU
+FROM emp e1, emp e2, dept d
+WHERE e1.mgr = e2.empno and length(e1.ename) > length(e2.ename) and e2.deptno = d.deptno;
+
+
+/* Varianta 2 */
+
+define venit = (e1.sal+nvl(e1.comm,0));
+
+select upper(d.dname) NUME_DEPT_SEF,
+months_between(sysdate,e1.hiredate) LUNI_LUCRATE_ANG,
+lower(substr(e1.ename, 1, 1)) INITIALA_ANG, 
+substr(&venit, length(&venit), 1) ULTIMA_CIFRA_SALARIU
+from emp e1
+	inner join emp e2
+		on e1.mgr = e2.empno
+		inner join dept d
+			on e2.deptno = d.deptno
+where length(e1.ename) > length(e2.ename);
+
+undefine venit
+
+---------------------------------------------------------------------------

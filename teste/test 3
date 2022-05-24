@@ -1,0 +1,40 @@
+Sa se scrie o cerere SQL care face o lista cu sefii de departament care au salariul mai mare decat salariul mediu pe companie. Sefii de departament au ID-ul specificat pe coloana MGR. 
+
+Antetul listei este urmatorul:
+
+Den_part,  Nume_sef,  Salariu_sef,  Sal_mediu_comp
+
+Obs. Salariul mediu se calculeaza prin trunchiere, fara zecimale.
+
+Sa se rezolve prin doua metode distincte folosind diverse functii SQL.
+
+Pentru testare se va utiliza baza de date a userului scott, formata din tabelele EMP, DEPT si SALGRADE.
+
+Varianta 1:
+select 
+d.dname as "Den_depart",
+e.ename as "Nume_sef",
+e.sal as "Salariu_sef",
+trunc(avg(all s.sal)) "Sal_mediu_comp"
+from dept d,
+emp e, 
+emp s
+group by d.dname, e.empno, e.mgr, e.deptno, d.deptno, e.sal, s.sal, e.ename
+having e.sal > avg(all s.sal) and
+e.deptno = d.deptno and
+e.empno = e.mgr;
+
+Varianta 2:
+select 
+d.dname as "Den_depart",
+e.ename as "Nume_sef",
+e.sal as "Salariu_sef",
+trunc(avg(all s.sal)) "Sal_mediu_comp"
+from emp s
+from emp e1
+	inner join emp e2
+		on e1.mgr = e2.empno
+		inner join dept d
+			on e2.deptno = d.deptno
+group by d.dname, e.empno, e.mgr, e.deptno, d.deptno, e.sal, s.sal, e.ename
+having e.sal > avg(all s.sal);

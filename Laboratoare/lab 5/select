@@ -1,0 +1,129 @@
+V1: JOIN 
+select
+d.den_dep as "Den_depart_sef",
+a1.nume as "Nume_sef",
+a1.functie as "Job_sef",
+a2.nume as "Nume_subalt",
+a2.salariu as "Salariu_subalt",
+a2.comision as "Comision_subalt"
+from
+departamente d,
+angajati a1,
+angajati a2
+where
+a1.id_ang = a2.id_sef
+and a2.salariu > 1000
+and nvl(a2.comision, 0) = 0
+and d.id_dep = a1.id_dep;
+
+V2: INNER JOIN
+select
+d.den_dep as "Den_depart_sef",
+a1.nume as "Nume_sef",
+a1.functie as "Job_sef",
+a2.nume as "Nume_subalt",
+a2.salariu as "Salariu_subalt",
+a2.comision as "Comision_subalt"
+from
+angajati a1 inner join angajati a2 on a1.id_ang=a2.id_sef
+inner join departamente d on a1.id_ang = d.id_dep
+where
+a2.salariu > 1000 and (a2.comision is null or a2.comision=0);
+
+
+V3: INNER JOIN
+select
+d.den_dep as "Den_depart_sef",
+a1.nume as "Nume_sef",
+a1.functie as "Job_sef",
+a2.nume as "Nume_subalt",
+a2.salariu as "Salariu_subalt",
+a2.comision as "Comision_subalt"
+from
+departamente d,
+angajati a1
+inner join angajati a2
+on a1.id_ang = a2.id_sef
+where
+d.id_dep = a1.id_dep
+and a2.salariu > 1000
+and nvl(a2.comision, 0) = 0;
+
+
+V4: JOIN VERTICAL
+select
+d.den_dep,
+a1.nume,
+a1.functie,
+a2.nume,
+a2.salariu,
+a2.comision
+from
+angajati a1,
+angajati a2,
+departamente d
+where a1.id_dep = d.id_dep
+intersect
+select
+d.den_dep,
+a1.nume,
+a1.functie,
+a2.nume,
+a2.salariu,
+a2.comision
+from
+angajati a1,
+angajati a2,
+departamente d
+where a1.id_ang = a2.id_sef
+intersect
+select 
+d.den_dep,
+a1.nume,
+a1.functie,
+a2.nume,
+a2.salariu,
+a2.comision
+from
+angajati a1,
+angajati a2,
+departamente d
+where
+a2.salariu > 1000
+and (a2.comision = 0 or a2.comision is null);
+
+
+V5: FULL OUTER JOIN
+select
+d.den_dep as "Den_depart_sef",
+a1.nume as "Nume_sef",
+a1.functie as "Job_sef",
+a2.nume as "Nume_subalt",
+a2.salariu as "Salariu_subalt",
+a2.comision as "Comision_subalt"
+from
+angajati a1 
+full outer join angajati a2 
+on a1.id_ang=a2.id_sef
+and
+a2.salariu > 1000 and (a2.comision is null or a2.comision=0)
+full outer join departamente d 
+on a1.id_ang = d.id_dep;
+
+
+V6: RIGHT OUTER JOIN
+select
+d.den_dep as "Den_depart_sef",
+a1.nume as "Nume_sef",
+a1.functie as "Job_sef",
+a2.nume as "Nume_subalt",
+a2.salariu as "Salariu_subalt",
+a2.comision as "Comision_subalt"
+from
+angajati a1
+right outer join departamente d
+on d.id_dep = a1.id_dep
+join angajati a2
+on a1.id_ang = a2.id_sef
+where
+a2.salariu > 1000 and (a2.comision = 0 or a2.comision is NULL)

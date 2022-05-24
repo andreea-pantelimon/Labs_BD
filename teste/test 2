@@ -1,0 +1,141 @@
+select
+d.dname as "Den_dep_subalt",
+e.ename as "Nume_subalt",
+e.hiredate as "Data_ang_subalt",
+e1.ename as "Nume_sef",
+e1.ename as "Data_ang_sef"
+from
+emp e
+full outer join emp e1
+on e1.deptno = e.deptno
+and
+extract(year from e1.hiredate)=extract(year from e.hiredate)
+full outer join dept d
+on e1.deptno = d.deptno
+ORDER BY e.ename;
+
+
+Varianta 2:
+select
+d.dname as "Den_dep_subalt",
+e.ename as "Nume_subalt",
+e.hiredate as "Data_ang_subalt",
+e1.ename as "Nume_sef",
+e1.ename as "Data_ang_sef"
+from
+emp e1
+right outer join dept d
+on d.deptno = e1.deptno
+join emp e
+on e1.deptno = e.deptno
+where
+extract(year from e1.hiredate)=extract(year from e.hiredate)
+ORDER BY e.ename;
+
+-----------------------------------------------------------------------
+
+Varianta 1: FULL OUTER JOIN
+select
+d.dname as "Den_dep_subalt",
+e.ename as "Nume_subalt",
+e.hiredate as "Data_ang_subalt",
+e1.ename as "Nume_sef",
+e1.ename as "Data_ang_sef"
+from
+emp e
+full outer join emp e1
+on e1.deptno = e.deptno
+and
+extract(year from e1.hiredate)=extract(year from e.hiredate)
+full outer join dept d
+on e1.deptno = d.deptno
+ORDER BY e.ename;
+
+Varianta 2: RIGHT OUTER JOIN
+select
+d.dname as "Den_dep_subalt",
+e.ename as "Nume_subalt",
+e.hiredate as "Data_ang_subalt",
+e1.ename as "Nume_sef",
+e1.ename as "Data_ang_sef"
+from
+emp e1
+right outer join dept d
+on d.deptno = e1.deptno
+join emp e
+on e1.deptno = e.deptno
+where
+extract(year from e1.hiredate)=extract(year from e.hiredate)
+ORDER BY e.ename;
+
+Varianta 3: INNER JOIN
+select
+d.dname as "Den_dep_subalt",
+e.ename as "Nume_subalt",
+e.hiredate as "Data_ang_subalt",
+e1.ename as "Nume_sef",
+e1.ename as "Data_ang_sef"
+from
+emp e1 inner join emp e on e1.deptno = e.deptno
+inner join dept d on e1.deptno = d.deptno
+where
+extract(year from e1.hiredate)=extract(year from e.hiredate)
+ORDER BY e.ename;
+
+
+Varianta 4: JOIN VERTICAL
+select
+d.dname,
+e.ename,
+e.hiredate ,
+e1.ename,
+e1.ename
+from
+emp e1,
+emp e,
+dept d
+where e1.deptno = e.deptno
+intersect
+select
+d.dname,
+e.ename,
+e.hiredate ,
+e1.ename,
+e1.ename
+from
+emp e1,
+emp e,
+dept d
+where e1.deptno = d.deptno
+intersect
+select
+d.dname,
+e.ename,
+e.hiredate ,
+e1.ename,
+e1.ename
+from
+emp e1,
+emp e,
+dept d
+where
+extract(year from e1.hiredate)=extract(year from e.hiredate)
+ORDER BY e1.ename;
+
+
+Varianta 5: JOIN
+select
+d.dname as "Den_dep_subalt",
+e.ename as "Nume_subalt",
+e.hiredate as "Data_ang_subalt",
+e1.ename as "Nume_sef",
+e1.ename as "Data_ang_sef"
+from
+emp e,
+emp e1,
+dept d
+where
+e1.deptno = e.deptno
+and d.deptno = e.deptno
+and extract(year from e1.hiredate)=extract(year from e.hiredate)
+ORDER BY e.ename;

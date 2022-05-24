@@ -1,0 +1,78 @@
+select
+d.den_dep "Den_dep",
+a.nume "Nume_ang",
+a.functie "Job",
+a.comision "Comision",
+count(a.id_ang) nr_ang
+from angajati a
+natural join departamente d
+where nvl(a.comision, 0) = 0
+group by d.den_dep,
+a.nume,
+a.functie,
+a.comision
+having count(a.id_ang) = (select max(count(id_ang))
+from angajati
+group by id_dep,
+functie);
+
+-------------------------------------------------------
+
+select max((select (count(id_ang))
+from angajati
+where id_dep = s.id_dep and
+functie = s.functie and
+nvl(comision, 0) = 0
+group by id_dep,
+functie)) max_count
+from angajati s;
+
+select
+d.den_dep "Den_dep",
+a.nume "Nume_ang",
+a.functie "Job",
+a.comision "Comision",
+count(a.id_ang) nr_ang
+from angajati a
+natural join departamente d
+group by d.den_dep, 
+a.functie,
+a.nume,
+a.comision
+having count(a.id_ang) = (select max((select (count(id_ang))
+from angajati
+where id_dep = s.id_dep and
+functie = s.functie and
+nvl(comision, 0) = 0
+group by id_dep,
+functie)) max_count
+from angajati s);
+
+-----------------------------------------------------
+
+select count(a.id_ang) Nr_angajati,
+d.id_dep,
+a.functie
+from angajati a
+join departamente d on a.id_dep = d.id_dep
+group by d.id_dep, a.functie
+having count(a.id_ang) = (select max(count(id_ang))
+from angajati
+where nvl(comision, 0) = 0
+group by id_dep, functie);
+
+CORECT DE LA PROF
+----------------------------------------------------
+select id_dep, functie, count(*) cc from angajati where nvl(comision, 0)=0 group by id_dep, functie;
+
+select max(cc) maxcc
+from (select id_dep, functie, count(*) cc from angajati where nvl(comision, 0)=0 group by id_dep, functie);
+
+
+select d.den_dep, e.nume, e.functie, e.comision from angajati e, departamente d,
+(select temp1.id_dep id_dep, temp1.functie functie, temp1.cc from
+(select id_dep, functie, count(*) cc from angajati where nvl(comision, 0)=0 group by id_dep, functie) temp1,
+(select max(cc) maxcc
+from (select id_dep, functie, count(*) cc from angajati where nvl(comision, 0)=0 group by id_dep, functie)) temp2
+where temp1.cc=temp2.maxcc) temp
+where d.id_dep=e.id_dep and e.id_dep=temp.id_dep and nvl(e.comision, 0)=0 and e.functie = temp.functie;

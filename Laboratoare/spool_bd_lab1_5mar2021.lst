@@ -1,0 +1,44 @@
+SQL>  set lines 200
+SQL> set pages 100
+SQL>  select to_char(sysdate, fdd-mm-yyyy hh:mi:ssf) from dual;
+SP2-0552: Bind variable "MI" not declared.
+SQL> insert into login_lab_bd values( fPantelimon Andreeaf, f331CCf, fLab1f, user, sysdate, null, null);
+insert into login_lab_bd values( fPantelimon Andreeaf, f331CCf, fLab1f, user, sysdate, null, null)
+                                 *
+ERROR at line 1:
+ORA-00911: invalid character 
+
+
+SQL> select * from login_lab_bd;
+
+no rows selected
+
+SQL> insert into login_lab_bd values( fPantelimon Andreeaf, f331CCf, fLab1f, user, sysdate, null, null);
+insert into login_lab_bd values( fPantelimon Andreeaf, f331CCf, fLab1f, user, sysdate, null, null)
+                                 *
+ERROR at line 1:
+ORA-00911: invalid character 
+
+
+SQL> update login_lab_bd set data_sf= sysdate where laborator='Lab1';
+
+0 rows updated.
+
+SQL> update login_lab_bd set durata= round((data_sf-data_in)*24*60) where laborator='Lab1';
+
+0 rows updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ssf), host_name from v$instance;
+ERROR:
+ORA-01756: quoted string not properly terminated 
+
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput, to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+no rows selected
+
+SQL> spool off;

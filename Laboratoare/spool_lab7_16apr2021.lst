@@ -1,0 +1,850 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+16-04-2021 08:04:30                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values('Pantelimon Andreea', '331CC', 'Lab7', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Pantelimon Andreea             331CC      Lab5       SCOTT      02-APR-21 02-APR-21        117                                                                                                          
+Pantelimon Andreea             331CC      Lab7       SCOTT      16-APR-21                                                                                                                               
+Pantelimon Andreea             331CC      Lab1       SCOTT      05-MAR-21 05-MAR-21          0                                                                                                          
+Pantelimon Andreea             331CC      Lab6       SCOTT      09-APR-21 09-APR-21        109                                                                                                          
+Pantelimon Andreea             331CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        100                                                                                                          
+Pantelimon Andreea             331CC      Lab3       SCOTT      19-MAR-21 19-MAR-21        126                                                                                                          
+Pantelimon Andreea             331CC      Lab4       SCOTT      26-MAR-21 26-MAR-21        129                                                                                                                                                                                                                 
+
+7 rows selected.
+
+SQL> select to_char(sysdate, 'dd-mm-yyyy') data_curenta
+  2  from dual;
+
+DATA_CUREN                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+16-04-2021                                                                                                                                                                                              
+
+SQL> select to_date('15112006', 'dd-mm-yyyy') data_ex from dual;
+
+DATA_EX                                                                                                                                                                                                 
+---------                                                                                                                                                                                               
+15-NOV-06                                                                                                                                                                                               
+
+SQL> select nume, to_char(data_ang, 'dd-mm-yyyy') data_ang
+  2  from angajati
+  3  where to_char(data_ang, 'yyyy') like '1982';
+
+NUME                           DATA_ANG                                                                                                                                                                 
+------------------------------ ----------                                                                                                                                                               
+MILLER                         23-01-1982                                                                                                                                                               
+
+SQL> select nume, to_char(data_ang, 'dd-mm-yyyy') data_ang
+  2  from angajati
+  3  where to_date(to_char(data_ang, 'yyyy'), 'yyyy') = to_date(to_char(1982), 'yyyy');
+
+NUME                           DATA_ANG                                                                                                                                                                 
+------------------------------ ----------                                                                                                                                                               
+MILLER                         23-01-1982                                                                                                                                                               
+
+SQL> select nume, to_char(data_ang, 'dd-mm-yyyy') data_ang
+  2  from angajati
+  3  where to_number(to_char(data_ang, 'yyyy')) = 1982;
+
+NUME                           DATA_ANG                                                                                                                                                                 
+------------------------------ ----------                                                                                                                                                               
+MILLER                         23-01-1982                                                                                                                                                               
+
+SQL> column numar format 99999
+SQL> select from 123.14 numar from dual;
+select from 123.14 numar from dual
+       *
+ERROR at line 1:
+ORA-00936: missing expression 
+
+
+SQL> column numar format 99999
+SQL> select 123.14 numar from dual;
+
+ NUMAR                                                                                                                                                                                                  
+------                                                                                                                                                                                                  
+   123                                                                                                                                                                                                  
+
+SQL> select nume, functie, salariu
+  2  decode(functie, 'MANAGER', salariu*1.25, 'ANALYST, salariu*1.24, salariu/4) prima
+  3  from angajati
+  4  where id_dep = 20
+  5  order by functie;
+ERROR:
+ORA-01756: quoted string not properly terminated 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select nume, functie, salariu,
+  2  decode(functie, 'MANAGER', salariu*1.25, 'ANALYST, salariu*1.24, salariu/4) prima
+  3  from angajati
+  4  where id_dep = 20
+  5* order by functie
+SQL> select nume, functie, salariu,
+  2  decode(functie, 'MANAGER', salariu*1.25, 'ANALYST, salariu*1.24, salariu/4) prima
+  3  from angajati
+  4  where id_dep = 20
+  5  order by functie
+  6  /
+ERROR:
+ORA-01756: quoted string not properly terminated 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select nume, functie, salariu,
+  2  	decode(functie, 'MANAGER', salariu*1.25,
+  3  			'ANALYST, salariu*1.24,
+  4  			salariu/4) prima
+  5  from angajati
+  6  where id_dep = 20
+  7* order by functie
+SQL> select nume, functie, salariu,
+  2  decode(functie, 'MANAGER', salariu*1.25,
+  3  'ANALYST, salariu*1.24,
+  4  salariu/4) prima
+  5  from angajati
+  6  where id_dep = 20
+  7  order by functie
+  8  /
+ERROR:
+ORA-01756: quoted string not properly terminated 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select nume, functie, salariu,
+  2  decode(functie, 'MANAGER', salariu*1.25,
+  3  'ANALYST', salariu*1.24,
+  4  salariu/4) prima
+  5  from angajati
+  6  where id_dep = 20
+  7* order by functie
+SQL> select nume, functie, salariu,
+  2  decode(functie, 'MANAGER', salariu*1.25,
+  3  'ANALYST', salariu*1.24,
+  4  salariu/4) prima
+  5  from angajati
+  6  where id_dep = 20
+  7  order by functie
+  8  /
+
+NUME                           FUNCTIE                 SALARIU      PRIMA                                                                                                                               
+------------------------------ -------------------- ---------- ----------                                                                                                                               
+SCOTT                          ANALYST                    3000       3720                                                                                                                               
+FORD                           ANALYST                    3000       3720                                                                                                                               
+ADAMS                          CLERK                      1100        275                                                                                                                               
+SMITH                          CLERK                       800        200                                                                                                                               
+JONES                          MANAGER                    2975    3718.75                                                                                                                               
+
+SQL> select nume, functie salariu,
+  2  to_char(data_ang, 'yyyy') an_ang
+  3  decode(sign(data_ang - to_date('1-JAN-1982')),
+  4  -1, SALARIU*1.25,
+  5  salariu*1.10) prima
+  6  from angajati
+  7  where id_dep = 20
+  8  order by functie;
+decode(sign(data_ang - to_date('1-JAN-1982')),
+*
+ERROR at line 3:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select avg (salariu) salariu from angajati;
+
+   SALARIU                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+2073.21429                                                                                                                                                                                              
+
+SQL> select id_dep, avg(salariu) from angajati
+  2  group by id_dep
+  3  order by 1;
+
+    ID_DEP AVG(SALARIU)                                                                                                                                                                                 
+---------- ------------                                                                                                                                                                                 
+        10   2916.66667                                                                                                                                                                                 
+        20         2175                                                                                                                                                                                 
+        30   1566.66667                                                                                                                                                                                 
+
+SQL> select id_dep, avg(salariu + nvl(comision, 0))
+  2  from angajati
+  3  group by id_dep
+  4  having avg(salariu + nvl(comision, 0)) > 2000;
+
+    ID_DEP AVG(SALARIU+NVL(COMISION,0))                                                                                                                                                                 
+---------- ----------------------------                                                                                                                                                                 
+        10                   2916.66667                                                                                                                                                                 
+        20                         2175                                                                                                                                                                 
+
+SQL> select id_dep, count(*) nr_ang,
+  2  count(salariu) count,
+  3  count(all salariu) count_all,
+  4  count(distinct salariu) count_distinct
+  5  from angajati
+  6  group by id_dep
+  7  order by 1;
+
+    ID_DEP     NR_ANG      COUNT  COUNT_ALL COUNT_DISTINCT                                                                                                                                              
+---------- ---------- ---------- ---------- --------------                                                                                                                                              
+        10          3          3          3              3                                                                                                                                              
+        20          5          5          5              4                                                                                                                                              
+        30          6          6          6              5                                                                                                                                              
+
+SQL> select id_dep,
+  2  count(functie) count,
+  3  count(distinct functie) count_distinct
+  4  from angajati
+  5  group by id_dep
+  6  having count(distinct functie) >= 2
+  7  order by 1;
+
+    ID_DEP      COUNT COUNT_DISTINCT                                                                                                                                                                    
+---------- ---------- --------------                                                                                                                                                                    
+        10          3              3                                                                                                                                                                    
+        20          5              3                                                                                                                                                                    
+        30          6              3                                                                                                                                                                    
+
+SQL> select d.den_dep,
+  2  min(a.salariu) sal_min,
+  3  min(distinct a.salariu) sal_min_d,
+  4  max(a.salariu) sal_max,
+  5  max (distinct a.salariu) sal_max_d,
+  6  sum(a.salariu) sal_sum,
+  7  sum(distinct a.salariu)sal_sum_d
+  8  from angajati a natural join departamente d
+  9  group by d.den_dep
+ 10  order by d.den_dep;
+
+DEN_DEP                           SAL_MIN  SAL_MIN_D    SAL_MAX  SAL_MAX_D    SAL_SUM  SAL_SUM_D                                                                                                        
+------------------------------ ---------- ---------- ---------- ---------- ---------- ----------                                                                                                        
+ACCOUNTING                           1300       1300       5000       5000       8750       8750                                                                                                        
+Asigurarea calitatii                  800        800       3000       3000      10875       7875                                                                                                        
+Proiectare Software                  1300       1300       5000       5000       8750       8750                                                                                                        
+RESEARCH                              800        800       3000       3000      10875       7875                                                                                                        
+SALES                                 950        950       2850       2850       9400       8150                                                                                                        
+
+SQL> select id_dep,
+  2  variance(salariu) sal_varstd,
+  3  variance(distinct salariu) sal_varstd_d,
+  4  stddev(salariu) sal_devstd,
+  5  stddev(distinct salariu) sal_devstd_d,
+  6  stddev(comision) com_devstd
+  7  from angajati
+  8  group by id_dep
+  9  order by 1;
+
+    ID_DEP SAL_VARSTD SAL_VARSTD_D SAL_DEVSTD SAL_DEVSTD_D COM_DEVSTD                                                                                                                                   
+---------- ---------- ------------ ---------- ------------ ----------                                                                                                                                   
+        10 3585833.33   3585833.33 1893.62967   1893.62967                                                                                                                                              
+        20    1261875   1398906.25  1123.3321   1182.75367                                                                                                                                              
+        30 446666.667       528250 668.331255    726.80809 602.771377                                                                                                                                   
+
+SQL> select
+  2  case lower(locatie)
+  3  when 'new york' then 1
+  4  when 'dallas' then 2
+  5  when 'chicago' then 3
+  6  when 'boston' then 4
+  7  end cod_dep
+  8  from departamente;
+case lower(locatie)
+           *
+ERROR at line 2:
+ORA-00904: "LOCATIE": invalid identifier 
+
+
+SQL> select * from departamente;
+
+    ID_DEP DEN_DEP                        SEDIU                                                                                                                                                         
+---------- ------------------------------ --------------------                                                                                                                                          
+        10 ACCOUNTING                     NEW YORK                                                                                                                                                      
+        20 RESEARCH                       DALLAS                                                                                                                                                        
+        30 SALES                          CHICAGO                                                                                                                                                       
+        40 OPERATIONS                     BOSTON                                                                                                                                                        
+        10 Proiectare Software            3212121                                                                                                                                                       
+        20 Asigurarea calitatii           3212122                                                                                                                                                       
+
+6 rows selected.
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1* select * from departamente
+SQL> select
+  2  
+SQL> select
+  2  case lower(sediu)
+  3  when 'new york' then 1
+  4  when 'dallas' then 2
+  5  when 'chicago' then 3
+  6  when 'boston' then 4
+  7  end cod_dep
+  8  from departamente;
+
+   COD_DEP                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+         1                                                                                                                                                                                              
+         2                                                                                                                                                                                              
+         3                                                                                                                                                                                              
+         4                                                                                                                                                                                              
+                                                                                                                                                                                                        
+                                                                                                                                                                                                        
+
+6 rows selected.
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+
+14 rows selected.
+
+SQL> select d.den_dep as "Den_depart",
+  2  nume,
+  3  comision,
+  4  min(a.salariu) Sal_min_comp,
+  5  avg(a.salariu) Sal_med_comp,
+  6  decode (a.functie, 'PRESIDENT', 0,
+  7  'MANAGER', 0,
+  8  salariu) prima
+  9  from angajati a natural join departamente d;
+select d.den_dep as "Den_depart",
+       *
+ERROR at line 1:
+ORA-00937: not a single-group group function 
+
+
+SQL> select * from departamente;
+
+    ID_DEP DEN_DEP                        SEDIU                                                                                                                                                         
+---------- ------------------------------ --------------------                                                                                                                                          
+        10 ACCOUNTING                     NEW YORK                                                                                                                                                      
+        20 RESEARCH                       DALLAS                                                                                                                                                        
+        30 SALES                          CHICAGO                                                                                                                                                       
+        40 OPERATIONS                     BOSTON                                                                                                                                                        
+        10 Proiectare Software            3212121                                                                                                                                                       
+        20 Asigurarea calitatii           3212122                                                                                                                                                       
+
+6 rows selected.
+
+SQL> select d.den_dep Den_depart,
+  2  nume,
+  3  comision,
+  4  min(a.salariu) Sal_min_comp,
+  5  avg(a.salariu) Sal_med_comp,
+  6  decode (a.functie, 'PRESIDENT', 0,
+  7  'MANAGER', 0,
+  8  salariu) prima
+  9  from angajati a natural join departamente d;
+select d.den_dep Den_depart,
+       *
+ERROR at line 1:
+ORA-00937: not a single-group group function 
+
+
+SQL> select d.den_dep,
+  2  a.nume,
+  3  a.comision,
+  4  min(a.salariu) Sal_min_comp,
+  5  avg(a.salariu) Sal_med_comp,
+  6  decode (a.functie, 'PRESIDENT', 0,
+  7  'MANAGER', 0,
+  8  salariu) prima
+  9  from angajati a natural join departamente d;
+select d.den_dep,
+       *
+ERROR at line 1:
+ORA-00937: not a single-group group function 
+
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  min(a.salariu) Sal_min_comp,
+  6  avg(a.salariu) Sal_med_comp,
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  salariu) prima
+ 10  from angajati a natural join departamente d;
+d.den_dep,
+*
+ERROR at line 2:
+ORA-00937: not a single-group group function 
+
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  min(a.salariu) Sal_min_comp,
+  6  avg(a.salariu) Sal_med_comp,
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  salariu) prima
+ 10  from angajati a natural join departamente d
+ 11  order by d.den_dep;
+d.den_dep,
+*
+ERROR at line 2:
+ORA-00937: not a single-group group function 
+
+
+SQL> select
+  2  a.nume,
+  3  a.comision,
+  4  min(a.salariu) Sal_min_comp,
+  5  avg(a.salariu) Sal_med_comp,
+  6  decode (a.functie, 'PRESIDENT', 0,
+  7  'MANAGER', 0,
+  8  salariu) prima
+  9  from angajati a natural join departamente d
+ 10  order by d.den_dep;
+a.nume,
+*
+ERROR at line 2:
+ORA-00937: not a single-group group function 
+
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  min(a.salariu) Sal_min_comp,
+  6  avg(a.salariu) Sal_med_comp,
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  salariu) prima
+ 10  from angajati a natural join departamente d
+ 11  group by d.den_dep;
+a.nume,
+*
+ERROR at line 3:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  min(a.salariu) Sal_min_comp,
+  6  avg(a.salariu) Sal_med_comp,
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  salariu) prima
+ 10  from angajati a natural join departamente d
+ 11  group by d.den_dep, a.nume, a.comision;
+decode (a.functie, 'PRESIDENT', 0,
+        *
+ERROR at line 7:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  min(a.salariu) Sal_min_comp,
+  6  avg(a.salariu) Sal_med_comp,
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  salariu) prima
+ 10  from angajati a natural join departamente d
+ 11  group by d.den_dep, a.nume, a.comision, a.functie;
+salariu) prima
+*
+ERROR at line 9:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  min(a.salariu) Sal_min_comp,
+  6  avg(a.salariu) Sal_med_comp,
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  a.salariu) prima
+ 10  from angajati a natural join departamente d
+ 11  group by d.den_dep, a.nume, a.comision, a.functie;
+a.salariu) prima
+*
+ERROR at line 9:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> select d.den_dep as "Den_depart",
+  2  a.nume "Nume",
+  3  a.comision "Comision",
+  4  (select min(salariu) sal_min from angajati) "Sal_min_comp",
+  5  (select avg(salariu) sal_med from angajati) "Sal_med_comp",
+  6  case
+  7  when a.functie = 'PRESIDENT' then 0
+  8  when a.functie = 'MANAGER' then 0
+  9  when nvl(a.comision, 0) != 0 then avg(a.salariu)
+ 10  when nvl(a.comision, 0) = 0 then min(a.salariu)
+ 11  end "Prima"
+ 12  from angajati a natural join departamente d
+ 13  group by d.den_dep, a.nume, a.comision, a.functie;
+
+Den_depart                     Nume                             Comision Sal_min_comp Sal_med_comp      Prima                                                                                           
+------------------------------ ------------------------------ ---------- ------------ ------------ ----------                                                                                           
+Asigurarea calitatii           SMITH                                              800   2073.21429        800                                                                                           
+Asigurarea calitatii           ADAMS                                              800   2073.21429       1100                                                                                           
+SALES                          ALLEN                                 300          800   2073.21429       1600                                                                                           
+Asigurarea calitatii           JONES                                              800   2073.21429          0                                                                                           
+ACCOUNTING                     CLARK                                              800   2073.21429          0                                                                                           
+Asigurarea calitatii           SCOTT                                              800   2073.21429       3000                                                                                           
+SALES                          TURNER                                  0          800   2073.21429       1500                                                                                           
+RESEARCH                       FORD                                               800   2073.21429       3000                                                                                           
+SALES                          BLAKE                                              800   2073.21429          0                                                                                           
+ACCOUNTING                     KING                                               800   2073.21429          0                                                                                           
+Proiectare Software            KING                                               800   2073.21429          0                                                                                           
+ACCOUNTING                     MILLER                                             800   2073.21429       1300                                                                                           
+SALES                          JAMES                                              800   2073.21429        950                                                                                           
+RESEARCH                       SMITH                                              800   2073.21429        800                                                                                           
+Proiectare Software            CLARK                                              800   2073.21429          0                                                                                           
+SALES                          WARD                                  500          800   2073.21429       1250                                                                                           
+RESEARCH                       JONES                                              800   2073.21429          0                                                                                           
+Proiectare Software            MILLER                                             800   2073.21429       1300                                                                                           
+SALES                          MARTIN                               1400          800   2073.21429       1250                                                                                           
+RESEARCH                       SCOTT                                              800   2073.21429       3000                                                                                           
+RESEARCH                       ADAMS                                              800   2073.21429       1100                                                                                           
+Asigurarea calitatii           FORD                                               800   2073.21429       3000                                                                                           
+
+22 rows selected.
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  min(a.salariu) Sal_min_comp,
+  6  avg(a.salariu) Sal_med_comp,
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  a.salariu) prima
+ 10  from angajati a natural join departamente d
+ 11  group by d.den_dep, a.nume, a.comision, a.functie, a.salariu;
+
+DEN_DEP                        NUME                             COMISION SAL_MIN_COMP SAL_MED_COMP      PRIMA                                                                                           
+------------------------------ ------------------------------ ---------- ------------ ------------ ----------                                                                                           
+SALES                          ALLEN                                 300         1600         1600       1600                                                                                           
+ACCOUNTING                     CLARK                                             2450         2450          0                                                                                           
+Asigurarea calitatii           ADAMS                                             1100         1100       1100                                                                                           
+RESEARCH                       JONES                                             2975         2975          0                                                                                           
+Asigurarea calitatii           SCOTT                                             3000         3000       3000                                                                                           
+RESEARCH                       ADAMS                                             1100         1100       1100                                                                                           
+Asigurarea calitatii           FORD                                              3000         3000       3000                                                                                           
+Proiectare Software            KING                                              5000         5000          0                                                                                           
+SALES                          TURNER                                  0         1500         1500       1500                                                                                           
+Asigurarea calitatii           SMITH                                              800          800        800                                                                                           
+SALES                          WARD                                  500         1250         1250       1250                                                                                           
+SALES                          MARTIN                               1400         1250         1250       1250                                                                                           
+RESEARCH                       SCOTT                                             3000         3000       3000                                                                                           
+Proiectare Software            MILLER                                            1300         1300       1300                                                                                           
+SALES                          JAMES                                              950          950        950                                                                                           
+RESEARCH                       FORD                                              3000         3000       3000                                                                                           
+RESEARCH                       SMITH                                              800          800        800                                                                                           
+Asigurarea calitatii           JONES                                             2975         2975          0                                                                                           
+ACCOUNTING                     KING                                              5000         5000          0                                                                                           
+SALES                          BLAKE                                             2850         2850          0                                                                                           
+Proiectare Software            CLARK                                             2450         2450          0                                                                                           
+ACCOUNTING                     MILLER                                            1300         1300       1300                                                                                           
+
+22 rows selected.
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  min(a.salariu) Sal_min_comp,
+  6  avg(a.salariu) Sal_med_comp,
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  a.salariu) prima,
+ 10  decode(a.comision, 0, avg(a.salariu),
+ 11  null, min(a.salariu) Sal_min_comp,
+ 12  a.salariu)
+ 13  from angajati a natural join departamente d
+ 14  group by d.den_dep, a.nume, a.comision, a.functie, a.salariu, a.comision;
+null, min(a.salariu) Sal_min_comp,
+                     *
+ERROR at line 11:
+ORA-00907: missing right parenthesis 
+
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  min(a.salariu) Sal_min_comp,
+  6  avg(a.salariu) Sal_med_comp,
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  a.salariu) prima,
+ 10  decode(a.comision, 0, avg(a.salariu),
+ 11  null, min(a.salariu),
+ 12  a.salariu)
+ 13  from angajati a natural join departamente d
+ 14  group by d.den_dep, a.nume, a.comision, a.functie, a.salariu, a.comision;
+
+DEN_DEP                        NUME                             COMISION SAL_MIN_COMP SAL_MED_COMP      PRIMA DECODE(A.COMISION,0,AVG(A.SALARIU),NULL,MIN(A.SALARIU),A.SALARIU)                         
+------------------------------ ------------------------------ ---------- ------------ ------------ ---------- -----------------------------------------------------------------                         
+SALES                          ALLEN                                 300         1600         1600       1600                                                              1600                         
+ACCOUNTING                     CLARK                                             2450         2450          0                                                              2450                         
+Asigurarea calitatii           ADAMS                                             1100         1100       1100                                                              1100                         
+RESEARCH                       JONES                                             2975         2975          0                                                              2975                         
+Asigurarea calitatii           SCOTT                                             3000         3000       3000                                                              3000                         
+RESEARCH                       ADAMS                                             1100         1100       1100                                                              1100                         
+Asigurarea calitatii           FORD                                              3000         3000       3000                                                              3000                         
+Proiectare Software            KING                                              5000         5000          0                                                              5000                         
+SALES                          TURNER                                  0         1500         1500       1500                                                              1500                         
+Asigurarea calitatii           SMITH                                              800          800        800                                                               800                         
+SALES                          WARD                                  500         1250         1250       1250                                                              1250                         
+SALES                          MARTIN                               1400         1250         1250       1250                                                              1250                         
+RESEARCH                       SCOTT                                             3000         3000       3000                                                              3000                         
+Proiectare Software            MILLER                                            1300         1300       1300                                                              1300                         
+SALES                          JAMES                                              950          950        950                                                               950                         
+RESEARCH                       FORD                                              3000         3000       3000                                                              3000                         
+RESEARCH                       SMITH                                              800          800        800                                                               800                         
+Asigurarea calitatii           JONES                                             2975         2975          0                                                              2975                         
+ACCOUNTING                     KING                                              5000         5000          0                                                              5000                         
+SALES                          BLAKE                                             2850         2850          0                                                              2850                         
+Proiectare Software            CLARK                                             2450         2450          0                                                              2450                         
+ACCOUNTING                     MILLER                                            1300         1300       1300                                                              1300                         
+
+22 rows selected.
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  (select min(salariu) sal_min from angajati) "Sal_min_comp",
+  6  (select avg(salariu) sal_med from angajati) "Sal_med_comp",
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  a.salariu) prima,
+ 10  decode(a.comision, 0, avg(a.salariu),
+ 11  null, min(a.salariu),
+ 12  a.salariu)
+ 13  from angajati a natural join departamente d
+ 14  group by d.den_dep, a.nume, a.comision, a.functie, a.salariu, a.comision;
+
+DEN_DEP                        NUME                             COMISION Sal_min_comp Sal_med_comp      PRIMA DECODE(A.COMISION,0,AVG(A.SALARIU),NULL,MIN(A.SALARIU),A.SALARIU)                         
+------------------------------ ------------------------------ ---------- ------------ ------------ ---------- -----------------------------------------------------------------                         
+SALES                          ALLEN                                 300          800   2073.21429       1600                                                              1600                         
+ACCOUNTING                     CLARK                                              800   2073.21429          0                                                              2450                         
+Asigurarea calitatii           ADAMS                                              800   2073.21429       1100                                                              1100                         
+RESEARCH                       JONES                                              800   2073.21429          0                                                              2975                         
+Asigurarea calitatii           SCOTT                                              800   2073.21429       3000                                                              3000                         
+RESEARCH                       ADAMS                                              800   2073.21429       1100                                                              1100                         
+Asigurarea calitatii           FORD                                               800   2073.21429       3000                                                              3000                         
+Proiectare Software            KING                                               800   2073.21429          0                                                              5000                         
+SALES                          TURNER                                  0          800   2073.21429       1500                                                              1500                         
+Asigurarea calitatii           SMITH                                              800   2073.21429        800                                                               800                         
+SALES                          WARD                                  500          800   2073.21429       1250                                                              1250                         
+SALES                          MARTIN                               1400          800   2073.21429       1250                                                              1250                         
+RESEARCH                       SCOTT                                              800   2073.21429       3000                                                              3000                         
+Proiectare Software            MILLER                                             800   2073.21429       1300                                                              1300                         
+SALES                          JAMES                                              800   2073.21429        950                                                               950                         
+RESEARCH                       FORD                                               800   2073.21429       3000                                                              3000                         
+RESEARCH                       SMITH                                              800   2073.21429        800                                                               800                         
+Asigurarea calitatii           JONES                                              800   2073.21429          0                                                              2975                         
+ACCOUNTING                     KING                                               800   2073.21429          0                                                              5000                         
+SALES                          BLAKE                                              800   2073.21429          0                                                              2850                         
+Proiectare Software            CLARK                                              800   2073.21429          0                                                              2450                         
+ACCOUNTING                     MILLER                                             800   2073.21429       1300                                                              1300                         
+
+22 rows selected.
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  (select min(salariu) sal_min from angajati) "Sal_min_comp",
+  6  (select avg(salariu) sal_med from angajati) "Sal_med_comp",
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  a.salariu) prima,
+ 10  decode(a.comision, 0, avg(a.salariu),
+ 11  null, min(a.salariu),
+ 12  a.salariu) prima
+ 13  from angajati a natural join departamente d
+ 14  group by d.den_dep, a.nume, a.comision, a.functie, a.salariu, a.comision;
+
+DEN_DEP                        NUME                             COMISION Sal_min_comp Sal_med_comp      PRIMA      PRIMA                                                                                
+------------------------------ ------------------------------ ---------- ------------ ------------ ---------- ----------                                                                                
+SALES                          ALLEN                                 300          800   2073.21429       1600       1600                                                                                
+ACCOUNTING                     CLARK                                              800   2073.21429          0       2450                                                                                
+Asigurarea calitatii           ADAMS                                              800   2073.21429       1100       1100                                                                                
+RESEARCH                       JONES                                              800   2073.21429          0       2975                                                                                
+Asigurarea calitatii           SCOTT                                              800   2073.21429       3000       3000                                                                                
+RESEARCH                       ADAMS                                              800   2073.21429       1100       1100                                                                                
+Asigurarea calitatii           FORD                                               800   2073.21429       3000       3000                                                                                
+Proiectare Software            KING                                               800   2073.21429          0       5000                                                                                
+SALES                          TURNER                                  0          800   2073.21429       1500       1500                                                                                
+Asigurarea calitatii           SMITH                                              800   2073.21429        800        800                                                                                
+SALES                          WARD                                  500          800   2073.21429       1250       1250                                                                                
+SALES                          MARTIN                               1400          800   2073.21429       1250       1250                                                                                
+RESEARCH                       SCOTT                                              800   2073.21429       3000       3000                                                                                
+Proiectare Software            MILLER                                             800   2073.21429       1300       1300                                                                                
+SALES                          JAMES                                              800   2073.21429        950        950                                                                                
+RESEARCH                       FORD                                               800   2073.21429       3000       3000                                                                                
+RESEARCH                       SMITH                                              800   2073.21429        800        800                                                                                
+Asigurarea calitatii           JONES                                              800   2073.21429          0       2975                                                                                
+ACCOUNTING                     KING                                               800   2073.21429          0       5000                                                                                
+SALES                          BLAKE                                              800   2073.21429          0       2850                                                                                
+Proiectare Software            CLARK                                              800   2073.21429          0       2450                                                                                
+ACCOUNTING                     MILLER                                             800   2073.21429       1300       1300                                                                                
+
+22 rows selected.
+
+SQL> select d.den_dep as "Den_depart",
+  2  a.nume "Nume",
+  3  a.comision "Comision",
+  4  (select min(salariu) sal_min from angajati) "Sal_min_comp",
+  5  (select avg(salariu) sal_med from angajati) "Sal_med_comp",
+  6  case
+  7  when a.functie = 'PRESIDENT' then 0
+  8  when a.functie = 'MANAGER' then 0
+  9  when nvl(a.comision, 0) != 0 then (select avg(salariu) sal_med from angajati)
+ 10  when nvl(a.comision, 0) = 0 then (select min(salariu) sal_min from angajati)
+ 11  end "Prima"
+ 12  from angajati a natural join departamente d
+ 13  group by d.den_dep, a.nume, a.comision, a.functie;
+
+Den_depart                     Nume                             Comision Sal_min_comp Sal_med_comp      Prima                                                                                           
+------------------------------ ------------------------------ ---------- ------------ ------------ ----------                                                                                           
+Asigurarea calitatii           SMITH                                              800   2073.21429        800                                                                                           
+Asigurarea calitatii           ADAMS                                              800   2073.21429        800                                                                                           
+SALES                          ALLEN                                 300          800   2073.21429 2073.21429                                                                                           
+Asigurarea calitatii           JONES                                              800   2073.21429          0                                                                                           
+ACCOUNTING                     CLARK                                              800   2073.21429          0                                                                                           
+Asigurarea calitatii           SCOTT                                              800   2073.21429        800                                                                                           
+SALES                          TURNER                                  0          800   2073.21429        800                                                                                           
+RESEARCH                       FORD                                               800   2073.21429        800                                                                                           
+SALES                          BLAKE                                              800   2073.21429          0                                                                                           
+ACCOUNTING                     KING                                               800   2073.21429          0                                                                                           
+Proiectare Software            KING                                               800   2073.21429          0                                                                                           
+ACCOUNTING                     MILLER                                             800   2073.21429        800                                                                                           
+SALES                          JAMES                                              800   2073.21429        800                                                                                           
+RESEARCH                       SMITH                                              800   2073.21429        800                                                                                           
+Proiectare Software            CLARK                                              800   2073.21429          0                                                                                           
+SALES                          WARD                                  500          800   2073.21429 2073.21429                                                                                           
+RESEARCH                       JONES                                              800   2073.21429          0                                                                                           
+Proiectare Software            MILLER                                             800   2073.21429        800                                                                                           
+SALES                          MARTIN                               1400          800   2073.21429 2073.21429                                                                                           
+RESEARCH                       SCOTT                                              800   2073.21429        800                                                                                           
+RESEARCH                       ADAMS                                              800   2073.21429        800                                                                                           
+Asigurarea calitatii           FORD                                               800   2073.21429        800                                                                                           
+
+22 rows selected.
+
+SQL> select
+  2  d.den_dep,
+  3  a.nume,
+  4  a.comision,
+  5  (select min(salariu) sal_min from angajati) "Sal_min_comp",
+  6  (select avg(salariu) sal_med from angajati) "Sal_med_comp",
+  7  decode (a.functie, 'PRESIDENT', 0,
+  8  'MANAGER', 0,
+  9  a.salariu) prima,
+ 10  decode(a.comision, 0, (select avg(salariu) sal_med from angajati),
+ 11  '', (select min(salariu) sal_min from angajati),
+ 12  a.salariu) prima
+ 13  from angajati a natural join departamente d
+ 14  group by d.den_dep, a.nume, a.comision, a.functie, a.salariu, a.comision;
+
+DEN_DEP                        NUME                             COMISION Sal_min_comp Sal_med_comp      PRIMA      PRIMA                                                                                
+------------------------------ ------------------------------ ---------- ------------ ------------ ---------- ----------                                                                                
+SALES                          ALLEN                                 300          800   2073.21429       1600       1600                                                                                
+ACCOUNTING                     CLARK                                              800   2073.21429          0        800                                                                                
+Asigurarea calitatii           ADAMS                                              800   2073.21429       1100        800                                                                                
+RESEARCH                       JONES                                              800   2073.21429          0        800                                                                                
+Asigurarea calitatii           SCOTT                                              800   2073.21429       3000        800                                                                                
+RESEARCH                       ADAMS                                              800   2073.21429       1100        800                                                                                
+Asigurarea calitatii           FORD                                               800   2073.21429       3000        800                                                                                
+Proiectare Software            KING                                               800   2073.21429          0        800                                                                                
+SALES                          TURNER                                  0          800   2073.21429       1500 2073.21429                                                                                
+Asigurarea calitatii           SMITH                                              800   2073.21429        800        800                                                                                
+SALES                          WARD                                  500          800   2073.21429       1250       1250                                                                                
+SALES                          MARTIN                               1400          800   2073.21429       1250       1250                                                                                
+RESEARCH                       SCOTT                                              800   2073.21429       3000        800                                                                                
+Proiectare Software            MILLER                                             800   2073.21429       1300        800                                                                                
+SALES                          JAMES                                              800   2073.21429        950        800                                                                                
+RESEARCH                       FORD                                               800   2073.21429       3000        800                                                                                
+RESEARCH                       SMITH                                              800   2073.21429        800        800                                                                                
+Asigurarea calitatii           JONES                                              800   2073.21429          0        800                                                                                
+ACCOUNTING                     KING                                               800   2073.21429          0        800                                                                                
+SALES                          BLAKE                                              800   2073.21429          0        800                                                                                
+Proiectare Software            CLARK                                              800   2073.21429          0        800                                                                                
+ACCOUNTING                     MILLER                                             800   2073.21429       1300        800                                                                                
+
+22 rows selected.
+
+SQL> update login_lab_bd set data_sf = sysdate where laborator='Lab7';
+
+1 row updated.
+
+SQL> update login_lab_bd set durata=round((data_sf-data_in)*24*60) where laborator='Lab7';
+
+1 row updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> from v$instance;
+SP2-0734: unknown command beginning "from v$ins..." - rest of line ignored.
+SQL> select instance_number, instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss'), host_name from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    TO_CHAR(STARTUP_TIM HOST_NAME                                                                                                                                          
+--------------- ---------------- ------------------- ----------------------------------------------------------------                                                                                   
+              1 db19c            15-04-2021 06:27:31 DESKTOP-E0N7ML4                                                                                                                                    
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput, to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Pantelimon Andreea             331CC      Lab5       02-04-2021 08:05:29 02-04-2021 10:02:05            117                                                                                             
+Pantelimon Andreea             331CC      Lab7       16-04-2021 08:05:24 16-04-2021 09:54:14            109                                                                                             
+Pantelimon Andreea             331CC      Lab1       05-03-2021 09:04:29 05-03-2021 09:04:52              0                                                                                             
+Pantelimon Andreea             331CC      Lab6       09-04-2021 08:08:53 09-04-2021 09:57:27            109                                                                                             
+Pantelimon Andreea             331CC      Lab2       12-03-2021 08:22:55 12-03-2021 10:02:50            100                                                                                             
+Pantelimon Andreea             331CC      Lab3       19-03-2021 08:06:57 19-03-2021 10:13:01            126                                                                                             
+Pantelimon Andreea             331CC      Lab4       26-03-2021 08:06:36 26-03-2021 10:15:46            129                                                                                                                                                                                        
+
+7 rows selected.
+
+SQL> spool off;

@@ -1,0 +1,25 @@
+select 
+nume Nume_angajat,
+functie Job,
+substr(functie, 2, 1) Litera,
+length(nume) - length(replace(nume, substr(functie, 2, 1), null)) Nr_aparitii
+from angajati;
+
+
+select
+id_dep,
+nume Nume_angajat,
+data_ang Data_angajare,
+next_day(add_months(data_ang, 3), 'FRIDAY') Data_evaluare,
+extract(day from next_day(add_months(data_ang, 3), 'FRIDAY')) Ziua
+from angajati
+where functie NOT LIKE 'PRESIDENT';
+
+select
+id_dep,
+nume Nume_angajat,
+data_ang Data_angajare,
+next_day(trunc(add_months(data_ang, 3)), 'FRIDAY') Data_evaluare,
+'FRIDAY' Ziua
+from angajati
+where nvl(id_sef, 0) != 0;

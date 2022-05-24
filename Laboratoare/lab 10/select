@@ -1,0 +1,148 @@
+1. identificam distinct joburile pe fiecare departamente
+2. numaram cate joburi distincte sunt pe fiecare departament
+3. vedem care departament are cel mai mare nr de joburi distincte->apare in lista finala
+4. asamblam cererea finala
+5. la final, se creeaza tabela
+
+
+1.
+select count (distinct functie) total, id_dep
+from angajati
+group by id_dep;
+ ----------------------
+/*select id_dep, max(total) final_dep
+from (select count (distinct functie) total, id_dep
+		from angajati
+		group by id_dep)
+where id_dep
+group by id_dep;*/
+-----------------------
+2.
+
+select *
+from (select id_dep, count(distinct functie) total 
+		from angajati
+		group by id_dep 
+		order by total desc)
+where rownum = 1;
+
+
+
+
+
+select a.id_dep, a.salariu, a.nume
+from angajati a
+	(select temp1.id_dep ide_dep, min(temp1.salariu) sal_min_job, temp1.nume nume_ang from
+		(select count (distinct functie) total, id_dep
+		from angajati
+		group by id_dep) temp1,
+		(select max(total) final_dep, a.id_dep
+		from (select count (distinct functie) total, id_dep
+		from angajati
+		group by id_dep), angajati a
+		group by a.id_dep)) temp2
+where temp1.id_dep = temp2.id_dep;
+
+
+
+
+
+
+
+(select max(total) final_dep, a.id_dep
+from (select count (distinct functie) total, id_dep
+from angajati
+group by id_dep), angajati a
+group by a.id_dep);
+
+
+----------------------------------------------
+
+select id_dep, functie, count(*) cc from angajati where nvl(comision, 0)=0 group by id_dep, functie;
+
+select max(cc) maxcc
+from (select id_dep, functie, count(*) cc from angajati where nvl(comision, 0)=0 group by id_dep, functie);
+
+
+select d.den_dep, e.nume, e.functie, e.comision from angajati e, departamente d,
+(select temp1.id_dep id_dep, temp1.functie functie, temp1.cc from
+(select id_dep, functie, count(*) cc from angajati where nvl(comision, 0)=0 group by id_dep, functie) temp1,
+(select max(cc) maxcc
+from (select id_dep, functie, count(*) cc from angajati where nvl(comision, 0)=0 group by id_dep, functie)) temp2
+where temp1.cc=temp2.maxcc) temp
+where d.id_dep=e.id_dep and e.id_dep=temp.id_dep and nvl(e.comision, 0)=0 and e.functie = temp.functie;
+
+
+---------------------------------------------------
+CORECT:
+- selectare id depratement si functie
+select id_dep, functie
+from angajati
+order by id_dep;
+
+-numararea functiilor distincte pe fiecare departament
+select count (distinct functie) functii_distincte, id_dep
+from angajati
+group by id_dep
+order by id_dep;
+
+- numarul maxim de functii distincte
+select max(functii_distincte) max
+from (select count (distinct functie) functii_distincte, id_dep
+from angajati
+group by id_dep
+order by id_dep);
+
+- afisarea functiilor departamentului selectata cu salariul minim
+select id_dep, functie, min(salariu) salariu_min
+from angajati
+group by functie, id_dep
+order by id_dep;
+
+- 
+select id_dep, functie, min(salariu) salariu_min
+from angajati
+group by functie, id_dep
+order by id_dep;
+
+-final subcerere
+select a.id_dep, a.functie, min(a.salariu) salariu_min
+from angajati a,
+(select id_dep, count(distinct functie) functii_distincte
+from angajati
+group by id_dep) dep
+where dep.functii_distincte = (select max(functii_distincte)
+from (select count (distinct functie) functii_distincte, id_dep
+from angajati
+group by id_dep
+order by id_dep))
+group by a.functie, a.id_dep
+order by a.id_dep;
+
+
+create table joburi 
+as select
+tmp.id_dep id_depart,
+tmp.functie job,
+tmp.salariu_min sal_min_job,
+a.nume nume_angajat
+from angajati a,
+(select a.id_dep, a.functie, min(a.salariu) salariu_min
+from angajati a,
+	(select id_dep, count(distinct functie) functii_distincte
+	from angajati
+	group by id_dep) dep
+	where dep.functii_distincte = (select max(functii_distincte)
+		from (select count (distinct functie) functii_distincte, id_dep
+		from angajati
+		group by id_dep))
+group by a.functie, a.id_dep) tmp
+where
+a.salariu = tmp.salariu_min and
+a.functie = tmp.functie and
+a.id_dep = tmp.id_dep;
+
+-------------------------------------------------------------
+Corect:
+
+select distinct a.id_dep

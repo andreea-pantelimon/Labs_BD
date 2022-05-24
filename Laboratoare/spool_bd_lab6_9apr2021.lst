@@ -1,0 +1,375 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+09-04-2021 08:08:02                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values('Pantelimon Andreea', '331CC', 'Lab6', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Pantelimon Andreea             331CC      Lab5       SCOTT      02-APR-21 02-APR-21        117                                                                                                          
+Pantelimon Andreea             331CC      Lab1       SCOTT      05-MAR-21 05-MAR-21          0                                                                                                          
+Pantelimon Andreea             331CC      Lab6       SCOTT      09-APR-21                                                                                                                               
+Pantelimon Andreea             331CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        100                                                                                                          
+Pantelimon Andreea             331CC      Lab3       SCOTT      19-MAR-21 19-MAR-21        126                                                                                                          
+Pantelimon Andreea             331CC      Lab4       SCOTT      26-MAR-21 26-MAR-21        129                                                                                                                                                                                                                   
+
+6 rows selected.
+
+SQL> select CONCAT(CONCAT(nume, ' este '), functie) ANG_FUNC
+  2  from angajati
+  3  where id_ang = 7839
+  4  ;
+
+ANG_FUNC                                                                                                                                                                                                
+--------------------------------------------------------                                                                                                                                                
+KING este PRESIDENT                                                                                                                                                                                     
+
+SQL> select REPLACE('JACK si JUE', 'J', 'BL') EX_REPLACE
+  2  from dual;
+
+EX_REPLACE                                                                                                                                                                                              
+-------------                                                                                                                                                                                           
+BLACK si BLUE                                                                                                                                                                                           
+
+SQL> select rpad(nume, 10, '*') ex_rpad
+  2  from angajati where id_dep = 10;
+
+EX_RPAD                                                                                                                                                                                                 
+----------------------------------------                                                                                                                                                                
+CLARK*****                                                                                                                                                                                              
+KING******                                                                                                                                                                                              
+MILLER****                                                                                                                                                                                              
+
+SQL> select lpad)nume, 10, '*') ex_lpad
+  2  from angajati
+  3  where id_dep = 10;
+select lpad)nume, 10, '*') ex_lpad
+           *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select lpad(nume, 10, '*') ex_lpad
+  2  from angajati
+  3  where id_dep = 10;
+
+EX_LPAD                                                                                                                                                                                                 
+----------------------------------------                                                                                                                                                                
+*****CLARK                                                                                                                                                                                              
+******KING                                                                                                                                                                                              
+****MILLER                                                                                                                                                                                              
+
+SQL> select substr('Popescu', 2, 3) from dual;
+
+SUB                                                                                                                                                                                                     
+---                                                                                                                                                                                                     
+ope                                                                                                                                                                                                     
+
+SQL> select ume, data_ang, add_months(data_ang, 3) data_mod
+  2  from angajati
+  3  where id_dep = 10;
+select ume, data_ang, add_months(data_ang, 3) data_mod
+       *
+ERROR at line 1:
+ORA-00904: "UME": invalid identifier 
+
+
+SQL> select nume, data_ang, add_months(data_ang, 3) data_mod
+  2  from angajati
+  3  where id_dep = 10;
+
+NUME                           DATA_ANG  DATA_MOD                                                                                                                                                       
+------------------------------ --------- ---------                                                                                                                                                      
+CLARK                          09-JUN-81 09-SEP-81                                                                                                                                                      
+KING                           17-NOV-81 17-FEB-82                                                                                                                                                      
+MILLER                         23-JAN-82 23-APR-82                                                                                                                                                      
+
+SQL> select nume, data_ang, last_day(data_ang) ultima_zi
+  2  from angajati
+  3  where id_dep = 10;
+
+NUME                           DATA_ANG  ULTIMA_ZI                                                                                                                                                      
+------------------------------ --------- ---------                                                                                                                                                      
+CLARK                          09-JUN-81 30-JUN-81                                                                                                                                                      
+KING                           17-NOV-81 30-NOV-81                                                                                                                                                      
+MILLER                         23-JAN-82 31-JAN-82                                                                                                                                                      
+
+SQL> select next_day('24-MAR-2014', 'MONDAY') urmatoarea_luni
+  2  from dual;
+
+URMATOARE                                                                                                                                                                                               
+---------                                                                                                                                                                                               
+31-MAR-14                                                                                                                                                                                               
+
+SQL> select nume, data_ang,
+  2  months_between('01-JAN-2014', data_ang) luni_vechime1,
+  3  months_between(data_ang, '01-JAN-2014') luni_vechime2
+  4  from angajati
+  5  where id_dep = 10;
+
+NUME                           DATA_ANG  LUNI_VECHIME1 LUNI_VECHIME2                                                                                                                                    
+------------------------------ --------- ------------- -------------                                                                                                                                    
+CLARK                          09-JUN-81    390.741935    -390.74194                                                                                                                                    
+KING                           17-NOV-81    385.483871    -385.48387                                                                                                                                    
+MILLER                         23-JAN-82    383.290323    -383.29032                                                                                                                                    
+
+SQL> select data_ang, round(data_ang, 'YEAR') rot_ang
+  2  from angajati
+  3  where id_ang = 7369;
+
+DATA_ANG  ROT_ANG                                                                                                                                                                                       
+--------- ---------                                                                                                                                                                                     
+17-DEC-80 01-JAN-81                                                                                                                                                                                     
+
+SQL> select data_ang, round(data_ang, 'MONTH') rot_luna
+  2  from angajati
+  3  where id_ang = 7369;
+
+DATA_ANG  ROT_LUNA                                                                                                                                                                                      
+--------- ---------                                                                                                                                                                                     
+17-DEC-80 01-JAN-81                                                                                                                                                                                     
+
+SQL> select data_ang, trunc(data_ang, 'YEAR') rot_an
+  2  from angajati
+  3  wgere id_ang = 7369;
+wgere id_ang = 7369
+      *
+ERROR at line 3:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select data_ang, trunc(data_ang, 'YEAR') rot_an
+  2  from angajati
+  3* where id_ang = 7369
+SQL> select data_ang, trunc(data_ang, 'YEAR') rot_an
+  2  from angajati
+  3  where id_ang = 7369;
+
+DATA_ANG  ROT_AN                                                                                                                                                                                        
+--------- ---------                                                                                                                                                                                     
+17-DEC-80 01-JAN-80                                                                                                                                                                                     
+
+SQL> select sysdate from dual;
+
+SYSDATE                                                                                                                                                                                                 
+---------                                                                                                                                                                                               
+09-APR-21                                                                                                                                                                                               
+
+SQL> select extract(day from sysdate) from dual;
+
+EXTRACT(DAYFROMSYSDATE)                                                                                                                                                                                 
+-----------------------                                                                                                                                                                                 
+                      9                                                                                                                                                                                 
+
+SQL> select extarct sysdate(month from sysdate) from dual;
+select extarct sysdate(month from sysdate) from dual
+               *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select extarct (month from sysdate) from dual;
+select extarct (month from sysdate) from dual
+                      *
+ERROR at line 1:
+ORA-00907: missing right parenthesis 
+
+
+SQL> select extract(month from sysdate) from dual;
+
+EXTRACT(MONTHFROMSYSDATE)                                                                                                                                                                               
+-------------------------                                                                                                                                                                               
+                        4                                                                                                                                                                               
+
+SQL> select extract(year from sysdate) from dual;
+
+EXTRACT(YEARFROMSYSDATE)                                                                                                                                                                                
+------------------------                                                                                                                                                                                
+                    2021                                                                                                                                                                                
+
+SQL> select data_ang,
+  2  data_ang + 7,
+  3  data_ang - 7,
+  4  sysdate - data_ang
+  5  from angajati
+  6  where data_ang like '%JUN';
+
+no rows selected
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+
+14 rows selected.
+
+SQL> select
+  2  nume as 'Nume_angajat',
+  3  functie as 'Job',
+  4  substr(functie, 2, 1) as 'Litera',
+  5  length(nume) - length(replace(nume, substr(functie, 2, 1), null)) as 'Nr_aparitii'
+  6  from angajati;
+nume as 'Nume_angajat',
+        *
+ERROR at line 2:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select
+  2  nume Nume_angajat,
+  3  functie Job,
+  4  substr(functie, 2, 1) Litera,
+  5  length(nume) - length(replace(nume, substr(functie, 2, 1), null)) Nr_aparitii
+  6  from angajati;
+
+NUME_ANGAJAT                   JOB                  LITE NR_APARITII                                                                                                                                    
+------------------------------ -------------------- ---- -----------                                                                                                                                    
+SMITH                          CLERK                L              0                                                                                                                                    
+ALLEN                          SALESMAN             A              1                                                                                                                                    
+WARD                           SALESMAN             A              1                                                                                                                                    
+JONES                          MANAGER              A              0                                                                                                                                    
+MARTIN                         SALESMAN             A              1                                                                                                                                    
+BLAKE                          MANAGER              A              1                                                                                                                                    
+CLARK                          MANAGER              A              1                                                                                                                                    
+SCOTT                          ANALYST              N              0                                                                                                                                    
+KING                           PRESIDENT            R              0                                                                                                                                    
+TURNER                         SALESMAN             A              0                                                                                                                                    
+ADAMS                          CLERK                L              0                                                                                                                                    
+JAMES                          CLERK                L              0                                                                                                                                    
+FORD                           ANALYST              N              0                                                                                                                                    
+MILLER                         CLERK                L              2                                                                                                                                    
+
+14 rows selected.
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+
+14 rows selected.
+
+SQL> select
+  2  id_dep,
+  3  nume Nume_angajat,
+  4  data_ang Data_angajare,
+  5  next_day(add_months(data_ang, 3), 'FRIDAY') Data_evaluare,
+  6  extract(day from next_day(add_months(data_ang, 3), 'FRIDAY')) Ziua
+  7  from angajati
+  8  where functie NOT LIKE 'PRESIDENT';
+
+    ID_DEP NUME_ANGAJAT                   DATA_ANGA DATA_EVAL       ZIUA                                                                                                                                
+---------- ------------------------------ --------- --------- ----------                                                                                                                                
+        20 SMITH                          17-DEC-80 20-MAR-81         20                                                                                                                                
+        30 ALLEN                          20-FEB-81 22-MAY-81         22                                                                                                                                
+        30 WARD                           22-FEB-81 29-MAY-81         29                                                                                                                                
+        20 JONES                          02-APR-81 03-JUL-81          3                                                                                                                                
+        30 MARTIN                         28-SEP-81 01-JAN-82          1                                                                                                                                
+        30 BLAKE                          01-MAY-81 07-AUG-81          7                                                                                                                                
+        10 CLARK                          09-JUN-81 11-SEP-81         11                                                                                                                                
+        20 SCOTT                          19-APR-87 24-JUL-87         24                                                                                                                                
+        30 TURNER                         08-SEP-81 11-DEC-81         11                                                                                                                                
+        20 ADAMS                          23-MAY-87 28-AUG-87         28                                                                                                                                
+        30 JAMES                          03-DEC-81 05-MAR-82          5                                                                                                                                
+        20 FORD                           03-DEC-81 05-MAR-82          5                                                                                                                                
+        10 MILLER                         23-JAN-82 30-APR-82         30                                                                                                                                
+
+13 rows selected.
+
+SQL> select
+  2  id_dep,
+  3  nume Nume_angajat,
+  4  data_ang Data_angajare,
+  5  next_day(trunc(add_months(data_ang, 3)), 'FRIDAY') Data_evaluare,
+  6  'FRIDAY' Ziua
+  7  from angajati
+  8  where nvl(id_sef, 0) != 0;
+
+    ID_DEP NUME_ANGAJAT                   DATA_ANGA DATA_EVAL ZIUA                                                                                                                                      
+---------- ------------------------------ --------- --------- ------                                                                                                                                    
+        20 SMITH                          17-DEC-80 20-MAR-81 FRIDAY                                                                                                                                    
+        30 ALLEN                          20-FEB-81 22-MAY-81 FRIDAY                                                                                                                                    
+        30 WARD                           22-FEB-81 29-MAY-81 FRIDAY                                                                                                                                    
+        20 JONES                          02-APR-81 03-JUL-81 FRIDAY                                                                                                                                    
+        30 MARTIN                         28-SEP-81 01-JAN-82 FRIDAY                                                                                                                                    
+        30 BLAKE                          01-MAY-81 07-AUG-81 FRIDAY                                                                                                                                    
+        10 CLARK                          09-JUN-81 11-SEP-81 FRIDAY                                                                                                                                    
+        20 SCOTT                          19-APR-87 24-JUL-87 FRIDAY                                                                                                                                    
+        30 TURNER                         08-SEP-81 11-DEC-81 FRIDAY                                                                                                                                    
+        20 ADAMS                          23-MAY-87 28-AUG-87 FRIDAY                                                                                                                                    
+        30 JAMES                          03-DEC-81 05-MAR-82 FRIDAY                                                                                                                                    
+        20 FORD                           03-DEC-81 05-MAR-82 FRIDAY                                                                                                                                    
+        10 MILLER                         23-JAN-82 30-APR-82 FRIDAY                                                                                                                                    
+
+13 rows selected.
+
+SQL> update login_lab_bd set data_sf=sysdate where laborator='Lab6';
+
+1 row updated.
+
+SQL> update login_lab_bd set durata=round((data_sf-data_in)*24*60) where laborator='Lab6';
+
+1 row updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select instance_number, instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss'), host_name from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    TO_CHAR(STARTUP_TIM HOST_NAME                                                                                                                                          
+--------------- ---------------- ------------------- ----------------------------------------------------------------                                                                                   
+              1 db19c            05-04-2021 11:29:32 DESKTOP-E0N7ML4                                                                                                                                    
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput, to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Pantelimon Andreea             331CC      Lab5       02-04-2021 08:05:29 02-04-2021 10:02:05            117                                                                                             
+Pantelimon Andreea             331CC      Lab1       05-03-2021 09:04:29 05-03-2021 09:04:52              0                                                                                             
+Pantelimon Andreea             331CC      Lab6       09-04-2021 08:08:53 09-04-2021 09:57:27            109                                                                                             
+Pantelimon Andreea             331CC      Lab2       12-03-2021 08:22:55 12-03-2021 10:02:50            100                                                                                             
+Pantelimon Andreea             331CC      Lab3       19-03-2021 08:06:57 19-03-2021 10:13:01            126                                                                                             
+Pantelimon Andreea             331CC      Lab4       26-03-2021 08:06:36 26-03-2021 10:15:46            129                                                                                                                                                                                         
+
+6 rows selected.
+
+SQL> spool off;

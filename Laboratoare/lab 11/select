@@ -1,0 +1,28 @@
+set lines 120
+set pagesize 40
+set echo off
+set feedback off
+set verify off
+column A format A20 heading 'Den_departament' justify center
+column B format A20 heading 'Nume_sef' justify center
+column C format A20 heading 'Nume_subaltern' justify center
+column D format 99,999 heading 'Salariu_subaltern' justify center
+column E noprint new_value F
+
+ttitle left 'Pag:' SQL.PNO center 'STRUCTURA ORGANIZATORICA' RIGHT F skip 1 center '-----------------' skip 1
+btitle center 'DIRECTOR RESURE UMANE'
+
+break on A nodup skip on B nodup on report
+
+compute sum label 'Toatl/Dep' of D on A
+compute sum label 'Toatal General' of D on report 
+
+select 
+d.den_dep A, a.nume B, a1.nume C, a1.salariu D,
+to_char(sysdate, 'DD-MM-YYYY') E
+from angajati a,
+angajati a1, 
+departamente d
+where
+a1.id_dep = d.id_dep and
+a1.id_sef = a.id_ang;

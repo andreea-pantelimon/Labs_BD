@@ -1,0 +1,540 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+14-05-2021 08:06:05                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values('Pantelimon Andreea', '331CC', 'Lab10', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Pantelimon Andreea             331CC      Lab5       SCOTT      02-APR-21 02-APR-21        117                                                                                                          
+Pantelimon Andreea             331CC      Lab7       SCOTT      16-APR-21 16-APR-21        109                                                                                                          
+Pantelimon Andreea             331CC      Lab9       SCOTT      07-MAY-21 07-MAY-21        106                                                                                                          
+Pantelimon Andreea             331CC      Lab1       SCOTT      05-MAR-21 05-MAR-21          0                                                                                                          
+Pantelimon Andreea             331CC      Lab6       SCOTT      09-APR-21 09-APR-21        109                                                                                                          
+Pantelimon Andreea             331CC      Lab8       SCOTT      23-APR-21 23-APR-21        109                                                                                                          
+Pantelimon Andreea             331CC      Lab10      SCOTT      14-MAY-21                                                                                                                               
+Pantelimon Andreea             331CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        100                                                                                                          
+Pantelimon Andreea             331CC      Lab3       SCOTT      19-MAR-21 19-MAR-21        126                                                                                                          
+Pantelimon Andreea             331CC      Lab4       SCOTT      26-MAR-21 26-MAR-21        129                                                                                                                                                                                                                
+
+10 rows selected.
+
+SQL> create table exemplu
+  2  (
+  3  data_implicita date default sysdate,
+  4  numar_implicit number(7,2) default 7.24,
+  5  string_implicit varchar2(5) default 'test',
+  6  operator varchar2(10) default user
+  7  );
+
+Table created.
+
+SQL> select * from exemplu;
+
+no rows selected
+
+SQL> select table_name, column_name, data_default
+  2  from user_tab_columns
+  3  where table_name = 'EXEMPLU';
+
+TABLE_NAME                                                                                                                                                                                              
+--------------------------------------------------------------------------------------------------------------------------------                                                                        
+COLUMN_NAME                                                                                                                                                                                             
+--------------------------------------------------------------------------------------------------------------------------------                                                                        
+DATA_DEFAULT                                                                                                                                                                                            
+--------------------------------------------------------------------------------                                                                                                                        
+EXEMPLU                                                                                                                                                                                                 
+DATA_IMPLICITA                                                                                                                                                                                          
+sysdate                                                                                                                                                                                                 
+                                                                                                                                                                                                        
+EXEMPLU                                                                                                                                                                                                 
+NUMAR_IMPLICIT                                                                                                                                                                                          
+7.24                                                                                                                                                                                                    
+                                                                                                                                                                                                        
+EXEMPLU                                                                                                                                                                                                 
+STRING_IMPLICIT                                                                                                                                                                                         
+'test'                                                                                                                                                                                                  
+                                                                                                                                                                                                        
+EXEMPLU                                                                                                                                                                                                 
+OPERATOR                                                                                                                                                                                                
+user                                                                                                                                                                                                    
+                                                                                                                                                                                                        
+
+SQL> create table dept_20
+  2  as
+  3  select id_dep, nume, data_ang,
+  4  salariu + nvl(comision, 0) venit
+  5  from angajati
+  6  where id_dep = 20;
+
+Table created.
+
+SQL> create table dept_30
+  2  (
+  3  id default 30,
+  4  nume not null,
+  5  data_ang,
+  6  prima
+  7  )
+  8  as
+  9  select id_dep, nume, data_ang,
+ 10  round(0.15*(salariu + nvl(comision,0)),0)
+ 11  from angajati
+ 12  where id_dep = 30;
+
+Table created.
+
+SQL> select * from dept_30;
+
+        ID NUME                           DATA_ANG       PRIMA                                                                                                                                          
+---------- ------------------------------ --------- ----------                                                                                                                                          
+        30 ALLEN                          20-FEB-81        346                                                                                                                                          
+        30 WARD                           22-FEB-81        294                                                                                                                                          
+        30 MARTIN                         28-SEP-81        398                                                                                                                                          
+        30 BLAKE                          01-MAY-81        534                                                                                                                                          
+        30 TURNER                         08-SEP-81        225                                                                                                                                          
+        30 JAMES                          03-DEC-81        143                                                                                                                                          
+
+6 rows selected.
+
+SQL> create table functii
+  2  (
+  3  cod number(2) constraint pk_cod primary key,
+  4  functie varchar2(20),
+  5  data_vigoare date default sysdate);
+
+Table created.
+
+SQL> create table example6
+  2  (
+  3  colA number(2), col2 number(2), col3 number(2)
+  4  );
+
+Table created.
+
+SQL> select * from example6;
+
+no rows selected
+
+SQL> alter table example6 rename to exampleAlter;
+
+Table altered.
+
+SQL> select * from example6;
+select * from example6
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> select * from exampleAlter;
+
+no rows selected
+
+SQL> drop table exampleAlter;
+
+Table dropped.
+
+SQL> select * from exampleAlter;
+select * from exampleAlter
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist 
+
+
+SQL> truncate table dept_30;
+
+Table truncated.
+
+SQL> select * from dept_30;
+
+no rows selected
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80     1017.5                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81    1756.67        550         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81    1406.67        550         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81     3192.5                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81    3006.67        550         30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+
+14 rows selected.
+
+SQL> select count (distinct functie) total, id_dep
+  2  from angajati
+  3  group by id_dep;
+
+     TOTAL     ID_DEP                                                                                                                                                                                   
+---------- ----------                                                                                                                                                                                   
+         3         30                                                                                                                                                                                   
+         3         10                                                                                                                                                                                   
+         3         20                                                                                                                                                                                   
+
+SQL> select max(total) final_dep
+  2  from (select count (distinct functie) total, id_dep
+  3  from angajati
+  4  group by id_dep;)
+  5  
+SQL> select max(total) final_dep
+  2  from (select count (distinct functie) total, id_dep
+  3  from angajati
+  4  group by id_dep);
+
+ FINAL_DEP                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+         3                                                                                                                                                                                              
+
+SQL> select max(total) final_dep, id_dep
+  2  from (select count (distinct functie) total, id_dep
+  3  from angajati
+  4  group by id_dep);
+select max(total) final_dep, id_dep
+                             *
+ERROR at line 1:
+ORA-00937: not a single-group group function 
+
+
+SQL> select max(total) final_dep, a.id_dep
+  2  from (select count (distinct functie) total, id_dep
+  3  from angajati
+  4  group by id_dep), angajati a;
+select max(total) final_dep, a.id_dep
+                             *
+ERROR at line 1:
+ORA-00937: not a single-group group function 
+
+
+SQL> select max(total) final_dep, a.id_dep
+  2  from (select count (distinct functie) total, id_dep
+  3  from angajati
+  4  group by id_dep), angajati a
+  5  group by a.id_dep;
+
+ FINAL_DEP     ID_DEP                                                                                                                                                                                   
+---------- ----------                                                                                                                                                                                   
+         3         30                                                                                                                                                                                   
+         3         10                                                                                                                                                                                   
+         3         20                                                                                                                                                                                   
+
+SQL> select id_dep id_dep, min(salariu) sal_min_job, nume nume_ang
+  2  from angajati
+  3  (select max(total) final_dep, a.id_dep
+  4  from (select count (distinct functie) total, id_dep
+  5  from angajati
+  6  group by id_dep), angajati a
+  7  group by a.id_dep);
+(select max(total) final_dep, a.id_dep
+ *
+ERROR at line 3:
+ORA-00936: missing expression 
+
+
+SQL> select a.id_dep, a.salariu, a.nume
+  2  from angajati a
+  3  (select temp1.id_dep ide_dep, min(temp1.salariu) sal_min_job, temp1.nume nume_ang from
+  4  (select count (distinct functie) total, id_dep
+  5  from angajati
+  6  group by id_dep) temp1,
+  7  (select max(total) final_dep, a.id_dep
+  8  from (select count (distinct functie) total, id_dep
+  9  from angajati
+ 10  group by id_dep), angajati a
+ 11  group by a.id_dep)) temp2
+ 12  where temp1.id_dep = temp2.id_dep) temp;
+(select temp1.id_dep ide_dep, min(temp1.salariu) sal_min_job, temp1.nume nume_ang from
+*
+ERROR at line 3:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> select a.id_dep, a.salariu, a.nume
+  2  from angajati a
+  3  (select temp1.id_dep ide_dep, min(temp1.salariu) sal_min_job, temp1.nume nume_ang from
+  4  (select count (distinct functie) total, id_dep
+  5  from angajati
+  6  group by id_dep) temp1,
+  7  (select max(total) final_dep, a.id_dep
+  8  from (select count (distinct functie) total, id_dep
+  9  from angajati
+ 10  group by id_dep), angajati a
+ 11  group by a.id_dep)) temp2
+ 12  where temp1.id_dep = temp2.id_dep;
+(select temp1.id_dep ide_dep, min(temp1.salariu) sal_min_job, temp1.nume nume_ang from
+*
+ERROR at line 3:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> select id_dep, max(total) final_dep,
+  2  from (select count (distinct functie) total, id_dep
+  3  from angajati
+  4  group by id_dep);
+from (select count (distinct functie) total, id_dep
+*
+ERROR at line 2:
+ORA-00936: missing expression 
+
+
+SQL> select id_dep, max(total) final_dep
+  2  from (select count (distinct functie) total, id_dep
+  3  from angajati
+  4  group by id_dep);
+select id_dep, max(total) final_dep
+       *
+ERROR at line 1:
+ORA-00937: not a single-group group function 
+
+
+SQL> select id_dep, max(total) final_dep
+  2  from (select count (distinct functie) total, id_dep
+  3  from angajati
+  4  group by id_dep)
+  5  group by id_dep;
+
+    ID_DEP  FINAL_DEP                                                                                                                                                                                   
+---------- ----------                                                                                                                                                                                   
+        30          3                                                                                                                                                                                   
+        10          3                                                                                                                                                                                   
+        20          3                                                                                                                                                                                   
+
+SQL> select *
+  2  from (select id_dep, count(distinct functie) total from angajati group by id_dep order by total desc)
+  3  where rownum = 1;
+
+    ID_DEP      TOTAL                                                                                                                                                                                   
+---------- ----------                                                                                                                                                                                   
+        30          3                                                                                                                                                                                   
+
+SQL> select id_dep, functie
+  2  from angajati
+  3  order by id_dep;
+
+    ID_DEP FUNCTIE                                                                                                                                                                                      
+---------- --------------------                                                                                                                                                                         
+        10 MANAGER                                                                                                                                                                                      
+        10 PRESIDENT                                                                                                                                                                                    
+        10 CLERK                                                                                                                                                                                        
+        20 MANAGER                                                                                                                                                                                      
+        20 ANALYST                                                                                                                                                                                      
+        20 CLERK                                                                                                                                                                                        
+        20 CLERK                                                                                                                                                                                        
+        20 ANALYST                                                                                                                                                                                      
+        30 SALESMAN                                                                                                                                                                                     
+        30 SALESMAN                                                                                                                                                                                     
+        30 SALESMAN                                                                                                                                                                                     
+        30 CLERK                                                                                                                                                                                        
+        30 MANAGER                                                                                                                                                                                      
+        30 SALESMAN                                                                                                                                                                                     
+
+14 rows selected.
+
+SQL> select count (distinct functie) functii_distincte, id_dep
+  2  from angajati
+  3  group by id_dep
+  4  order by id_dep;
+
+FUNCTII_DISTINCTE     ID_DEP                                                                                                                                                                            
+----------------- ----------                                                                                                                                                                            
+                3         10                                                                                                                                                                            
+                3         20                                                                                                                                                                            
+                3         30                                                                                                                                                                            
+
+SQL> select max(functii_distincte)
+  2  from (select count (distinct functie) functii_distincte, id_dep
+  3  from angajati
+  4  group by id_dep
+  5  order by id_dep);
+
+MAX(FUNCTII_DISTINCTE)                                                                                                                                                                                  
+----------------------                                                                                                                                                                                  
+                     3                                                                                                                                                                                  
+
+SQL> 
+SQL> select id_dep, functie, min(salariu) salariu_min
+  2  from angajati
+  3  group by functie, id_dep
+  4  order by id_dep;
+
+    ID_DEP FUNCTIE              SALARIU_MIN                                                                                                                                                             
+---------- -------------------- -----------                                                                                                                                                             
+        10 CLERK                       1300                                                                                                                                                             
+        10 MANAGER                     2450                                                                                                                                                             
+        10 PRESIDENT                   5000                                                                                                                                                             
+        20 ANALYST                     3000                                                                                                                                                             
+        20 CLERK                     1017.5                                                                                                                                                             
+        20 MANAGER                   3192.5                                                                                                                                                             
+        30 CLERK                        950                                                                                                                                                             
+        30 MANAGER                  3006.67                                                                                                                                                             
+        30 SALESMAN                    1250                                                                                                                                                             
+
+9 rows selected.
+
+SQL> select id_dep, functie, min(salariu) salariu_min
+  2  from angajati
+  3  group by functie, id_dep
+  4  order by id_dep;
+
+    ID_DEP FUNCTIE              SALARIU_MIN                                                                                                                                                             
+---------- -------------------- -----------                                                                                                                                                             
+        10 CLERK                       1300                                                                                                                                                             
+        10 MANAGER                     2450                                                                                                                                                             
+        10 PRESIDENT                   5000                                                                                                                                                             
+        20 ANALYST                     3000                                                                                                                                                             
+        20 CLERK                     1017.5                                                                                                                                                             
+        20 MANAGER                   3192.5                                                                                                                                                             
+        30 CLERK                        950                                                                                                                                                             
+        30 MANAGER                  3006.67                                                                                                                                                             
+        30 SALESMAN                    1250                                                                                                                                                             
+
+9 rows selected.
+
+SQL> select a.id_dep, a.functie, min(a.salariu) salariu_min
+  2  from angajati a,
+  3  (select id_dep, count(distinct functie) functii_distincte
+  4  from angajati
+  5  group by id_dep) dep
+  6  where dep.functii_distincte = (select max(functii_distincte)
+  7  from (select count (distinct functie) functii_distincte, id_dep
+  8  from angajati
+  9  group by id_dep
+ 10  order by id_dep))
+ 11  group by a.functie, a.id_dep
+ 12  order by a.id_dep;
+
+    ID_DEP FUNCTIE              SALARIU_MIN                                                                                                                                                             
+---------- -------------------- -----------                                                                                                                                                             
+        10 CLERK                       1300                                                                                                                                                             
+        10 MANAGER                     2450                                                                                                                                                             
+        10 PRESIDENT                   5000                                                                                                                                                             
+        20 ANALYST                     3000                                                                                                                                                             
+        20 CLERK                     1017.5                                                                                                                                                             
+        20 MANAGER                   3192.5                                                                                                                                                             
+        30 CLERK                        950                                                                                                                                                             
+        30 MANAGER                  3006.67                                                                                                                                                             
+        30 SALESMAN                    1250                                                                                                                                                             
+
+9 rows selected.
+
+SQL> create table joburi
+  2  as
+  3  tmp.id_dep id_depart,
+  4  tmp.functie job,
+  5  tmp.salariu_min sal_min_job,
+  6  a.nume nume_angajat
+  7  from angajati a,
+  8  (select a.id_dep, a.functie, min(a.salariu) salariu_min
+  9  from angajati a,
+ 10  (select id_dep, count(distinct functie) functii_distincte
+ 11  from angajati
+ 12  group by id_dep) dep
+ 13  where dep.functii_distincte = (select max(functii_distincte)
+ 14  from (select count (distinct functie) functii_distincte, id_dep
+ 15  from angajati
+ 16  group by id_dep))
+ 17  group by a.functie, a.id_dep) tmp
+ 18  where
+ 19  a.salariu = tmp.salariu_min and
+ 20  a.functie = tmp.functie and
+ 21  a.id_dep = tmp.id_dep;
+tmp.id_dep id_depart,
+*
+ERROR at line 3:
+ORA-00928: missing SELECT keyword 
+
+
+SQL> create table joburi
+  2  as select
+  3  tmp.id_dep id_depart,
+  4  tmp.functie job,
+  5  tmp.salariu_min sal_min_job,
+  6  a.nume nume_angajat
+  7  from angajati a,
+  8  (select a.id_dep, a.functie, min(a.salariu) salariu_min
+  9  from angajati a,
+ 10  (select id_dep, count(distinct functie) functii_distincte
+ 11  from angajati
+ 12  group by id_dep) dep
+ 13  where dep.functii_distincte = (select max(functii_distincte)
+ 14  from (select count (distinct functie) functii_distincte, id_dep
+ 15  from angajati
+ 16  group by id_dep))
+ 17  group by a.functie, a.id_dep) tmp
+ 18  where
+ 19  a.salariu = tmp.salariu_min and
+ 20  a.functie = tmp.functie and
+ 21  a.id_dep = tmp.id_dep;
+
+Table created.
+
+SQL> select * from joburi;
+
+ ID_DEPART JOB                  SAL_MIN_JOB NUME_ANGAJAT                                                                                                                                                
+---------- -------------------- ----------- ------------------------------                                                                                                                              
+        20 CLERK                     1017.5 SMITH                                                                                                                                                       
+        20 MANAGER                   3192.5 JONES                                                                                                                                                       
+        30 SALESMAN                    1250 MARTIN                                                                                                                                                      
+        30 MANAGER                  3006.67 BLAKE                                                                                                                                                       
+        10 MANAGER                     2450 CLARK                                                                                                                                                       
+        20 ANALYST                     3000 SCOTT                                                                                                                                                       
+        10 PRESIDENT                   5000 KING                                                                                                                                                        
+        30 CLERK                        950 JAMES                                                                                                                                                       
+        20 ANALYST                     3000 FORD                                                                                                                                                        
+        10 CLERK                       1300 MILLER                                                                                                                                                      
+
+10 rows selected.
+
+SQL> update login_lab_bd set data_sf=sysdate where laborator='Lab10';
+
+1 row updated.
+
+SQL> update login_lab_bd set durata=round((data_sf-data_in)*24*60) where laborator='Lab10';
+
+1 row updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select instance_number, instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss') host_name from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    HOST_NAME                                                                                                                                                              
+--------------- ---------------- -------------------                                                                                                                                                    
+              1 db19c            11-05-2021 08:53:26                                                                                                                                                    
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput, to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Pantelimon Andreea             331CC      Lab5       02-04-2021 08:05:29 02-04-2021 10:02:05            117                                                                                             
+Pantelimon Andreea             331CC      Lab7       16-04-2021 08:05:24 16-04-2021 09:54:14            109                                                                                             
+Pantelimon Andreea             331CC      Lab9       07-05-2021 08:09:24 07-05-2021 09:55:52            106                                                                                             
+Pantelimon Andreea             331CC      Lab1       05-03-2021 09:04:29 05-03-2021 09:04:52              0                                                                                             
+Pantelimon Andreea             331CC      Lab6       09-04-2021 08:08:53 09-04-2021 09:57:27            109                                                                                             
+Pantelimon Andreea             331CC      Lab8       23-04-2021 08:06:01 23-04-2021 09:54:52            109                                                                                             
+Pantelimon Andreea             331CC      Lab10      14-05-2021 08:06:05 14-05-2021 10:14:49            129                                                                                             
+Pantelimon Andreea             331CC      Lab2       12-03-2021 08:22:55 12-03-2021 10:02:50            100                                                                                             
+Pantelimon Andreea             331CC      Lab3       19-03-2021 08:06:57 19-03-2021 10:13:01            126                                                                                             
+Pantelimon Andreea             331CC      Lab4       26-03-2021 08:06:36 26-03-2021 10:15:46            129                                                                                                                                                                                       
+
+10 rows selected.
+
+SQL> spool off;

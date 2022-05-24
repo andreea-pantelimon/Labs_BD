@@ -1,0 +1,848 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+26-03-2021 08:32:33                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values('Pantelimon Andreea', '331CC', 'Lab4', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Pantelimon Andreea             331CC      Lab1       SCOTT      05-MAR-21 05-MAR-21          0                                                                                                          
+Pantelimon Andreea             331CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        100                                                                                                          
+Pantelimon Andreea             331CC      Lab3       SCOTT      19-MAR-21 19-MAR-21        126                                                                                                          
+Pantelimon Andreea             331CC      Lab4       SCOTT      26-MAR-21                                                                                                                                                                                                                                                             
+
+SQL> create table departamente4 as
+  2  select
+  3  deptno id_dep,
+  4  dname den_dep,
+  5  loc locatie
+  6  from dept;
+create table departamente4 as
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> create table departamente41 as
+  2  
+SQL> drop departamente4
+  2  
+SQL> drop departamente4;
+drop departamente4
+     *
+ERROR at line 1:
+ORA-00950: invalid DROP option 
+
+
+SQL> drop table departamente4;
+
+Table dropped.
+
+SQL> create table departamente4 as
+  2  select
+  3  deptno id_dep,
+  4  dname den_dep,
+  5  loc locatie
+  6  from dept;
+
+Table created.
+
+SQL> drop table angajati4;
+
+Table dropped.
+
+SQL> create table angajati4 as
+  2  select
+  3  empno id_ang,
+  4  ename nume,
+  5  job functie,
+  6  mgr id_sef,
+  7  hiredate data_ang,
+  8  sal salariu,
+  9  comm comision,
+ 10  deptno id_dep
+ 11  from emp;
+
+Table created.
+
+SQL> select * from angajati4;
+
+    ID_ANG NUME       FUNCTIE       ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                                                   
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------                                                                                                                   
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20                                                                                                                   
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30                                                                                                                   
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30                                                                                                                   
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20                                                                                                                   
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30                                                                                                                   
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30                                                                                                                   
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10                                                                                                                   
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20                                                                                                                   
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10                                                                                                                   
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30                                                                                                                   
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20                                                                                                                   
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30                                                                                                                   
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20                                                                                                                   
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10                                                                                                                   
+
+14 rows selected.
+
+SQL> select id_dep, den_dep
+  2  from departamente4;
+
+    ID_DEP DEN_DEP                                                                                                                                                                                      
+---------- --------------                                                                                                                                                                               
+        10 ACCOUNTING                                                                                                                                                                                   
+        20 RESEARCH                                                                                                                                                                                     
+        30 SALES                                                                                                                                                                                        
+        40 OPERATIONS                                                                                                                                                                                   
+
+SQL> select
+  2  id_ang||'-'||nume angajat,
+  3  functie,
+  4  data_ang
+  5  from angajati4
+  6  order by id_ang desc;
+
+ANGAJAT                                             FUNCTIE   DATA_ANG                                                                                                                                  
+--------------------------------------------------- --------- ---------                                                                                                                                 
+7934-MILLER                                         CLERK     23-JAN-82                                                                                                                                 
+7902-FORD                                           ANALYST   03-DEC-81                                                                                                                                 
+7900-JAMES                                          CLERK     03-DEC-81                                                                                                                                 
+7876-ADAMS                                          CLERK     23-MAY-87                                                                                                                                 
+7844-TURNER                                         SALESMAN  08-SEP-81                                                                                                                                 
+7839-KING                                           PRESIDENT 17-NOV-81                                                                                                                                 
+7788-SCOTT                                          ANALYST   19-APR-87                                                                                                                                 
+7782-CLARK                                          MANAGER   09-JUN-81                                                                                                                                 
+7698-BLAKE                                          MANAGER   01-MAY-81                                                                                                                                 
+7654-MARTIN                                         SALESMAN  28-SEP-81                                                                                                                                 
+7566-JONES                                          MANAGER   02-APR-81                                                                                                                                 
+7521-WARD                                           SALESMAN  22-FEB-81                                                                                                                                 
+7499-ALLEN                                          SALESMAN  20-FEB-81                                                                                                                                 
+7369-SMITH                                          CLERK     17-DEC-80                                                                                                                                 
+
+14 rows selected.
+
+SQL> select
+  2  id_ang||'-'||nume angajat,
+  3  functie,
+  4  salariu+nvl(comision,0) as "venit lunar",
+  5  '     ' as semnatura
+  6  from angajati4
+  7  order by id_dep;
+
+ANGAJAT                                             FUNCTIE   venit lunar SEMNA                                                                                                                         
+--------------------------------------------------- --------- ----------- -----                                                                                                                         
+7782-CLARK                                          MANAGER          2450                                                                                                                               
+7839-KING                                           PRESIDENT        5000                                                                                                                               
+7934-MILLER                                         CLERK            1300                                                                                                                               
+7566-JONES                                          MANAGER          2975                                                                                                                               
+7902-FORD                                           ANALYST          3000                                                                                                                               
+7876-ADAMS                                          CLERK            1100                                                                                                                               
+7369-SMITH                                          CLERK             800                                                                                                                               
+7788-SCOTT                                          ANALYST          3000                                                                                                                               
+7521-WARD                                           SALESMAN         1750                                                                                                                               
+7844-TURNER                                         SALESMAN         1500                                                                                                                               
+7499-ALLEN                                          SALESMAN         1900                                                                                                                               
+7900-JAMES                                          CLERK             950                                                                                                                               
+7698-BLAKE                                          MANAGER          2850                                                                                                                               
+7654-MARTIN                                         SALESMAN         2650                                                                                                                               
+
+14 rows selected.
+
+SQL> select nume, 'cu functie', functie
+  2  from angajati4;
+
+NUME       'CUFUNCTIE FUNCTIE                                                                                                                                                                           
+---------- ---------- ---------                                                                                                                                                                         
+SMITH      cu functie CLERK                                                                                                                                                                             
+ALLEN      cu functie SALESMAN                                                                                                                                                                          
+WARD       cu functie SALESMAN                                                                                                                                                                          
+JONES      cu functie MANAGER                                                                                                                                                                           
+MARTIN     cu functie SALESMAN                                                                                                                                                                          
+BLAKE      cu functie MANAGER                                                                                                                                                                           
+CLARK      cu functie MANAGER                                                                                                                                                                           
+SCOTT      cu functie ANALYST                                                                                                                                                                           
+KING       cu functie PRESIDENT                                                                                                                                                                         
+TURNER     cu functie SALESMAN                                                                                                                                                                          
+ADAMS      cu functie CLERK                                                                                                                                                                             
+JAMES      cu functie CLERK                                                                                                                                                                             
+FORD       cu functie ANALYST                                                                                                                                                                           
+MILLER     cu functie CLERK                                                                                                                                                                             
+
+14 rows selected.
+
+SQL> select
+  2  den_dep||' are codul '||id_dep "Lista Departamente"
+  3  from departamente4
+  4  order by den_dep asc;
+
+Lista Departamente                                                                                                                                                                                      
+-----------------------------------------------------------------                                                                                                                                       
+ACCOUNTING are codul 10                                                                                                                                                                                 
+OPERATIONS are codul 40                                                                                                                                                                                 
+RESEARCH are codul 20                                                                                                                                                                                   
+SALES are codul 30                                                                                                                                                                                      
+
+SQL> select
+  2  a.id_ang ecuson,
+  3  a.nume,
+  4  a._data_ang as "Data Angajarii",
+  5  a.salariu
+  6  from angajati4 a
+  7  where id_dep = 10;
+a._data_ang as "Data Angajarii",
+  *
+ERROR at line 4:
+ORA-00911: invalid character 
+
+
+SQL> select a.id_ang ecuson,
+  2  a.nume,
+  3  a.data_ang as "Data Angajarii",
+  4  a.salariu
+  5  from angajati4 a
+  6  where id_dep = 10;
+
+    ECUSON NUME       Data Anga    SALARIU                                                                                                                                                              
+---------- ---------- --------- ----------                                                                                                                                                              
+      7782 CLARK      09-JUN-81       2450                                                                                                                                                              
+      7839 KING       17-NOV-81       5000                                                                                                                                                              
+      7934 MILLER     23-JAN-82       1300                                                                                                                                                              
+
+SQL> select
+  2  id_dep "Nr. departament",
+  3  nume,
+  4  functie,
+  5  salariu,
+  6  data_ang as "Data Angajarii"
+  7  from angajati4
+  8  where lower(functie) = 'MANAGER'
+  9  order by id_dep;
+
+no rows selected
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select
+  2  id_dep "Nr. departament",
+  3  nume,
+  4  functie,
+  5  salariu,
+  6  data_ang as "Data Angajarii"
+  7  from angajati4
+  8  where LOWER(functie) = 'MANAGER'
+  9* order by id_dep
+SQL> select
+  2  id_dep "Nr. departament",
+  3  nume,
+  4  functie,
+  5  salariu,
+  6  data_ang as "Data Angajarii"
+  7  from angajati4
+  8  where LOWER(functie) = 'MANAGER'
+  9  order by id_dep;
+
+no rows selected
+
+SQL> select
+  2  id_dep "Nr. departament",
+  3  nume,
+  4  functie,
+  5  salariu,
+  6  data_ang as "Data Angajarii"
+  7  from angajati4
+  8  where LOWER(functie) = 'MANAGER'
+  9  order by id_dep;
+
+no rows selected
+
+SQL> select
+  2  id_dep departament,
+  3  functie,
+  4  nume,
+  5  data_ang as "Data Angajarii"
+  6  from angajati4
+  7  where data_ang between '1-MAY-1981' and '31-DEC1981'
+  8  order by 1, 2 desc;
+
+DEPARTAMENT FUNCTIE   NUME       Data Anga                                                                                                                                                              
+----------- --------- ---------- ---------                                                                                                                                                              
+         10 PRESIDENT KING       17-NOV-81                                                                                                                                                              
+         10 MANAGER   CLARK      09-JUN-81                                                                                                                                                              
+         20 ANALYST   FORD       03-DEC-81                                                                                                                                                              
+         30 SALESMAN  TURNER     08-SEP-81                                                                                                                                                              
+         30 SALESMAN  MARTIN     28-SEP-81                                                                                                                                                              
+         30 MANAGER   BLAKE      01-MAY-81                                                                                                                                                              
+         30 CLERK     JAMES      03-DEC-81                                                                                                                                                              
+
+7 rows selected.
+
+SQL> select
+  2  id_dep departament,
+  3  functie,
+  4  nume,
+  5  data_ang as "Data Angajarii"
+  6  from angajati4
+  7  where data_ang >= '1-MAY-1981' and data_ang <= '31-DEC-1981'
+  8  order by 1, 2 desc;
+
+DEPARTAMENT FUNCTIE   NUME       Data Anga                                                                                                                                                              
+----------- --------- ---------- ---------                                                                                                                                                              
+         10 PRESIDENT KING       17-NOV-81                                                                                                                                                              
+         10 MANAGER   CLARK      09-JUN-81                                                                                                                                                              
+         20 ANALYST   FORD       03-DEC-81                                                                                                                                                              
+         30 SALESMAN  TURNER     08-SEP-81                                                                                                                                                              
+         30 SALESMAN  MARTIN     28-SEP-81                                                                                                                                                              
+         30 MANAGER   BLAKE      01-MAY-81                                                                                                                                                              
+         30 CLERK     JAMES      03-DEC-81                                                                                                                                                              
+
+7 rows selected.
+
+SQL> select id_ang as ecuson,
+  2  nume,
+  3  functie,
+  4  salariu + nvl(comision,0) "Venit lunar"
+  5  from angajati4
+  6  where id_ang in (7499,7902,7876)
+  7  order by nume;
+
+    ECUSON NUME       FUNCTIE   Venit lunar                                                                                                                                                             
+---------- ---------- --------- -----------                                                                                                                                                             
+      7876 ADAMS      CLERK            1100                                                                                                                                                             
+      7499 ALLEN      SALESMAN         1900                                                                                                                                                             
+      7902 FORD       ANALYST          3000                                                                                                                                                             
+
+SQL> select
+  2  id_ang as ecuson,
+  3  nume,
+  4  functie,
+  5  data_ang as "Data Angajarii"
+  6  from angajati4
+  7  where data_ang like '%80';
+
+    ECUSON NUME       FUNCTIE   Data Anga                                                                                                                                                               
+---------- ---------- --------- ---------                                                                                                                                                               
+      7369 SMITH      CLERK     17-DEC-80                                                                                                                                                               
+
+SQL> select
+  2  id_ang as ecuson,
+  3  nume
+  4  , functie,
+  5  data_ang as "Data Angajarii"
+  6  from angajati4
+  7  where nume LIKE 'F%' and functie like '       ';
+
+no rows selected
+
+SQL> select
+  2  id_ang as ecuson,
+  3  nume,
+  4  functie,
+  5  salariu,
+  6  comision
+  7  from angajati4
+  8  where (comision = 0 or comision is NULL) and id_dep = 20
+  9  order by nume;
+
+    ECUSON NUME       FUNCTIE      SALARIU   COMISION                                                                                                                                                   
+---------- ---------- --------- ---------- ----------                                                                                                                                                   
+      7876 ADAMS      CLERK           1100                                                                                                                                                              
+      7902 FORD       ANALYST         3000                                                                                                                                                              
+      7566 JONES      MANAGER         2975                                                                                                                                                              
+      7788 SCOTT      ANALYST         3000                                                                                                                                                              
+      7369 SMITH      CLERK            800                                                                                                                                                              
+
+SQL> select id_ang as ecuson
+  2  nume,
+  3  functie,
+  4  salariu,
+  5  comision
+  6  from angajati4
+  7  where (comision != 0 and comision is not NULL) and functie = UPPER('salesman')
+  8  order by nume;
+nume,
+*
+ERROR at line 2:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select id_ang as ecuson,
+  2  nume,
+  3  functie,
+  4  salariu,
+  5  comision
+  6  from angajati4
+  7  where (comision != 0 and comision is not NULL) and functie = UPPER('salesman')
+  8* order by nume
+SQL> select id_ang as ecuson,
+  2  nume,
+  3  functie,
+  4  salariu,
+  5  comision
+  6  from angajati4
+  7  where (comision != 0 and comision is not NULL) and functie = UPPER('salesman')
+  8  order by nume;
+
+    ECUSON NUME       FUNCTIE      SALARIU   COMISION                                                                                                                                                   
+---------- ---------- --------- ---------- ----------                                                                                                                                                   
+      7499 ALLEN      SALESMAN        1600        300                                                                                                                                                   
+      7654 MARTIN     SALESMAN        1250       1400                                                                                                                                                   
+      7521 WARD       SALESMAN        1250        500                                                                                                                                                   
+
+SQL> select
+  2  id_ang as ecuson,
+  3  nume,
+  4  functie,
+  5  salariu,
+  6  id_dep departament
+  7  from angajati4
+  8  where
+  9  salariu > 1500 and
+ 10  LOWER(functie) = 'manager' or
+ 11  UPPER(functie) = 'ANALYST'
+ 12  order by functie, nume desc;
+
+    ECUSON NUME       FUNCTIE      SALARIU DEPARTAMENT                                                                                                                                                  
+---------- ---------- --------- ---------- -----------                                                                                                                                                  
+      7788 SCOTT      ANALYST         3000          20                                                                                                                                                  
+      7902 FORD       ANALYST         3000          20                                                                                                                                                  
+      7566 JONES      MANAGER         2975          20                                                                                                                                                  
+      7782 CLARK      MANAGER         2450          10                                                                                                                                                  
+      7698 BLAKE      MANAGER         2850          30                                                                                                                                                  
+
+SQL> select * from angajati4;
+
+    ID_ANG NUME       FUNCTIE       ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                                                   
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------                                                                                                                   
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20                                                                                                                   
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30                                                                                                                   
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30                                                                                                                   
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20                                                                                                                   
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30                                                                                                                   
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30                                                                                                                   
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10                                                                                                                   
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20                                                                                                                   
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10                                                                                                                   
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30                                                                                                                   
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20                                                                                                                   
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30                                                                                                                   
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20                                                                                                                   
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10                                                                                                                   
+
+14 rows selected.
+
+SQL> slect * from departamente4;
+SP2-0734: unknown command beginning "slect * fr..." - rest of line ignored.
+SQL> select * from departamente4;
+
+    ID_DEP DEN_DEP        LOCATIE                                                                                                                                                                       
+---------- -------------- -------------                                                                                                                                                                 
+        10 ACCOUNTING     NEW YORK                                                                                                                                                                      
+        20 RESEARCH       DALLAS                                                                                                                                                                        
+        30 SALES          CHICAGO                                                                                                                                                                       
+        40 OPERATIONS     BOSTON                                                                                                                                                                        
+
+SQL> select
+  2  nume||' & '||functie nume&job,
+  3  data_ang,
+  4  salariu+nvl(comision,0) as "Venit_lunar",
+  5  An_ang_dir_vanzari
+  6  from angajati4
+  7  where
+  8  An_ang_dir_vanzari = '&data_ang' and
+  9  Venit_lunar < 2000;
+Enter value for job: 17-NOV-81
+old   2: nume||' & '||functie nume&job,
+new   2: nume||' & '||functie nume17-NOV-81,
+Enter value for data_ang: 17-NOV-81
+old   8: An_ang_dir_vanzari = '&data_ang' and
+new   8: An_ang_dir_vanzari = '17-NOV-81' and
+nume||' & '||functie nume17-NOV-81,
+                           *
+ERROR at line 2:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select
+  2  nume||' & '||functie as "Nume&Job",
+  3  data_ang,
+  4  salariu + nvl(comision,0) as "Venit_lunar",
+  5  An_ang_dir_vanzari
+  6  from angajati4
+  7  where
+  8  An_ang_dir_vanzari = '&data_ang' and
+  9  Venit_lunar < 2000;
+Enter value for job: 17-NOV-81
+old   2: nume||' & '||functie as "Nume&Job",
+new   2: nume||' & '||functie as "Nume17-NOV-81",
+Enter value for data_ang: 17-NOV-81
+old   8: An_ang_dir_vanzari = '&data_ang' and
+new   8: An_ang_dir_vanzari = '17-NOV-81' and
+Venit_lunar < 2000
+*
+ERROR at line 9:
+ORA-00904: "VENIT_LUNAR": invalid identifier 
+
+
+SQL> EDIT
+Wrote file afiedt.buf
+
+  1  select
+  2  nume||' & '||functie as "Nume AND Job",
+  3  data_ang,
+  4  salariu + nvl(comision,0) as "Venit_lunar",
+  5  An_ang_dir_vanzari
+  6  from angajati4
+  7  where
+  8  An_ang_dir_vanzari = '&data_ang' and
+  9* salariu + nvl(comision,0) < 2000
+SQL> select
+  2  nume||' & '||functie as "Nume AND Job",
+  3  data_ang,
+  4  salariu + nvl(comision,0) as "Venit_lunar",
+  5  An_ang_dir_vanzari
+  6  from angajati4
+  7  where
+  8  An_ang_dir_vanzari = '&data_ang' and
+  9  salariu + nvl(comision,0) < 2000;
+Enter value for data_ang: 17-NOV-81
+old   8: An_ang_dir_vanzari = '&data_ang' and
+new   8: An_ang_dir_vanzari = '17-NOV-81' and
+An_ang_dir_vanzari = '17-NOV-81' and
+*
+ERROR at line 8:
+ORA-00904: "AN_ANG_DIR_VANZARI": invalid identifier 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select
+  2  nume||' & '||functie as "Nume AND Job",
+  3  data_ang,
+  4  salariu + nvl(comision,0) as "Venit_lunar",
+  5  functie An_ang_dir_vanzari
+  6  from angajati4
+  7  where
+  8  functie = '&data_ang' and
+  9* salariu + nvl(comision,0) < 2000
+SQL> select
+  2  nume||' & '||functie as "Nume AND Job",
+  3  data_ang,
+  4  salariu + nvl(comision,0) as "Venit_lunar",
+  5  functie An_ang_dir_vanzari
+  6  from angajati4
+  7  where
+  8  functie = '&data_ang' and
+  9  salariu + nvl(comision,0) < 2000;
+Enter value for data_ang: 17-NOV-81
+old   8: functie = '&data_ang' and
+new   8: functie = '17-NOV-81' and
+
+no rows selected
+
+SQL> select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang_dir as "An_ang_dir_vanzari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm.0) < 2000 and
+  9  extract(year from hiredate) = &an_ang_dir;
+Enter value for an_ang_dir: 17-NOV-81
+old   5: &&an_ang_dir as "An_ang_dir_vanzari"
+new   5: 17-NOV-81 as "An_ang_dir_vanzari"
+old   9: extract(year from hiredate) = &an_ang_dir
+new   9: extract(year from hiredate) = 17-NOV-81
+sal+nvl(comm.0) < 2000 and
+    *
+ERROR at line 8:
+ORA-00909: invalid number of arguments 
+
+
+SQL> EDIT
+Wrote file afiedt.buf
+
+  1  select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang_dir as "An_ang_dir_vanzari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm,0) < 2000 and
+  9* extract(year from hiredate) = &an_ang_dir
+SQL> select * from emp;
+
+     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO                                                                                                                   
+---------- ---------- --------- ---------- --------- ---------- ---------- ----------                                                                                                                   
+      7369 SMITH      CLERK           7902 17-DEC-80        800                    20                                                                                                                   
+      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30                                                                                                                   
+      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30                                                                                                                   
+      7566 JONES      MANAGER         7839 02-APR-81       2975                    20                                                                                                                   
+      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30                                                                                                                   
+      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30                                                                                                                   
+      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10                                                                                                                   
+      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20                                                                                                                   
+      7839 KING       PRESIDENT            17-NOV-81       5000                    10                                                                                                                   
+      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30                                                                                                                   
+      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20                                                                                                                   
+      7900 JAMES      CLERK           7698 03-DEC-81        950                    30                                                                                                                   
+      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20                                                                                                                   
+      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10                                                                                                                   
+
+14 rows selected.
+
+SQL> select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang_dir as "An_ang_dir_vanzari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm,0) < 2000 and
+  9  extract(year from hiredate) = &an_ang_dir;
+old   5: &&an_ang_dir as "An_ang_dir_vanzari"
+new   5: 17-NOV-81 as "An_ang_dir_vanzari"
+old   9: extract(year from hiredate) = &an_ang_dir
+new   9: extract(year from hiredate) = 17-NOV-81
+extract(year from hiredate) = 17-NOV-81
+                                 *
+ERROR at line 9:
+ORA-00904: "NOV": invalid identifier 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang as "An_ang_dir_vanzari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm,0) < 2000 and
+  9* extract(year from hiredate) = &an_ang
+SQL> select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang as "An_ang_dir_vanzari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm,0) < 2000 and
+  9  extract(year from hiredate) = &an_ang;
+Enter value for an_ang: 17-NOV-81
+old   5: &&an_ang as "An_ang_dir_vanzari"
+new   5: 17-NOV-81 as "An_ang_dir_vanzari"
+old   9: extract(year from hiredate) = &an_ang
+new   9: extract(year from hiredate) = 17-NOV-81
+extract(year from hiredate) = 17-NOV-81
+                                 *
+ERROR at line 9:
+ORA-00904: "NOV": invalid identifier 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang_director as "An_ang_dir_vanzari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm,0) < 2000 and
+  9* extract(year from hiredate) = &an_ang_director
+SQL> select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang_director as "An_ang_dir_vanzari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm,0) < 2000 and
+  9  extract(year from hiredate) = &an_ang_director;
+Enter value for an_ang_director: 1981
+old   5: &&an_ang_director as "An_ang_dir_vanzari"
+new   5: 1981 as "An_ang_dir_vanzari"
+old   9: extract(year from hiredate) = &an_ang_director
+new   9: extract(year from hiredate) = 1981
+
+Nume'&'Job             Data_anga Venit_lunar An_ang_dir_vanzari                                                                                                                                         
+---------------------- --------- ----------- ------------------                                                                                                                                         
+ALLEN & SALESMAN       20-FEB-81        1900               1981                                                                                                                                         
+WARD & SALESMAN        22-FEB-81        1750               1981                                                                                                                                         
+TURNER & SALESMAN      08-SEP-81        1500               1981                                                                                                                                         
+JAMES & CLERK          03-DEC-81         950               1981                                                                                                                                         
+
+SQL> select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang_dir as "An_ang_dir_vaznari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm,0) < 2000 and
+  9  hiredate like '%&an_ang_dir';
+old   5: &&an_ang_dir as "An_ang_dir_vaznari"
+new   5: 17-NOV-81 as "An_ang_dir_vaznari"
+old   9: hiredate like '%&an_ang_dir'
+new   9: hiredate like '%17-NOV-81'
+17-NOV-81 as "An_ang_dir_vaznari"
+   *
+ERROR at line 5:
+ORA-00904: "NOV": invalid identifier 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang_director as "An_ang_dir_vaznari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm,0) < 2000 and
+  9* hiredate like '%&an_ang_director'
+SQL> select
+  2  ename||' & '||job "Nume'&'Job",
+  3  hiredate as "Data_angajare",
+  4  sal+nvl(comm,0) "Venit_lunar",
+  5  &&an_ang_director as "An_ang_dir_vaznari"
+  6  from emp
+  7  where
+  8  sal+nvl(comm,0) < 2000 and
+  9  hiredate like '%&an_ang_director';
+
+Nume'&'Job             Data_anga Venit_lunar An_ang_dir_vanzari                                                                                                                                         
+---------------------- --------- ----------- ------------------                                                                                                                                         
+ALLEN & SALESMAN       20-FEB-81        1900               1981                                                                                                                                         
+WARD & SALESMAN        22-FEB-81        1750               1981                                                                                                                                         
+TURNER & SALESMAN      08-SEP-81        1500               1981                                                                                                                                         
+JAMES & CLERK          03-DEC-81         950               1981    
+
+SQL> @d:\var3.sql 1981
+old   5: &&1 as "An_ang_dir_vanzari"
+new   5: 1981 as "An_ang_dir_vanzari"
+old   9: extract (year from hiredate) = &1
+new   9: extract (year from hiredate) = 1981
+
+Nume'&'Job             Data_anga Venit_lunar An_ang_dir_vanzari                                                                                                                                         
+---------------------- --------- ----------- ------------------                                                                                                                                         
+ALLEN & SALESMAN       20-FEB-81        1900               1981                                                                                                                                         
+WARD & SALESMAN        22-FEB-81        1750               1981                                                                                                                                         
+TURNER & SALESMAN      08-SEP-81        1500               1981                                                                                                                                         
+JAMES & CLERK          03-DEC-81         950               1981                                                                                                                                         
+
+SQL> @d:\var4.sql
+SP2-0311: string expected but not found
+SP2-0003: Ill-formed ACCEPT command starting as 
+SP2-0734: unknown command beginning "'Introduce..." - rest of line ignored.
+old   9: extarct(year from hiredate) = '&an_ang_director'
+new   9: extarct(year from hiredate) = '1981'
+extarct(year from hiredate) = '1981'
+             *
+ERROR at line 9:
+ORA-00907: missing right parenthesis 
+
+
+SQL> @d:\var4.sql
+SP2-0311: string expected but not found
+SP2-0003: Ill-formed ACCEPT command starting as 
+SP2-0734: unknown command beginning "'Introduce..." - rest of line ignored.
+Enter value for an_ang_director: 1981
+old   9: extarct(year from hiredate) = &an_ang_director
+new   9: extarct(year from hiredate) = 1981
+extarct(year from hiredate) = 1981
+             *
+ERROR at line 9:
+ORA-00907: missing right parenthesis 
+
+
+SQL> @d:\var4.sql
+Introduceti anul directorului:1981
+old   9: extarct(year from hiredate) = &an_ang_director
+new   9: extarct(year from hiredate) = 1981
+extarct(year from hiredate) = 1981
+             *
+ERROR at line 9:
+ORA-00907: missing right parenthesis 
+
+
+SQL> @d:\var4.sql
+Introduceti anul directorului:1981
+old   9: extract (year from hiredate) = &an_ang_director
+new   9: extract (year from hiredate) = 1981
+an_ang_director as "An_ang_dir_vanzari"
+*
+ERROR at line 5:
+ORA-00904: "AN_ANG_DIRECTOR": invalid identifier 
+
+
+SQL> @d:\var4.sql
+Introduceti anul directorului:1981
+old   5: &&an_ang_director as "An_ang_dir_vanzari"
+new   5: 1981 as "An_ang_dir_vanzari"
+old   9: extract (year from hiredate) = &an_ang_director
+new   9: extract (year from hiredate) = 1981
+
+Nume'&'Job             Data_anga Venit_lunar An_ang_dir_vanzari                                                                                                                                         
+---------------------- --------- ----------- ------------------                                                                                                                                         
+ALLEN & SALESMAN       20-FEB-81        1900               1981                                                                                                                                         
+WARD & SALESMAN        22-FEB-81        1750               1981                                                                                                                                         
+TURNER & SALESMAN      08-SEP-81        1500               1981                                                                                                                                         
+JAMES & CLERK          03-DEC-81         950               1981                                                                                                                                         
+
+SQL> update login_lab_bd set data_sf=sysdate where laborator='Lab4';
+
+2 rows updated.
+
+SQL> update login_lab_bd set durata = round((data_sf-data_in)*24*60) where laborator='Lab4';
+
+2 rows updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select instance_number,instamce_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss'), host_name from v$instance;
+select instance_number,instamce_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss'), host_name from v$instance
+                       *
+ERROR at line 1:
+ORA-00904: "INSTAMCE_NAME": invalid identifier 
+
+
+SQL> select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss'), host_name from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    TO_CHAR(STARTUP_TIM HOST_NAME                                                                                                                                          
+--------------- ---------------- ------------------- ----------------------------------------------------------------                                                                                   
+              1 db19c            17-03-2021 07:16:31 DESKTOP-E0N7ML4                                                                                                                                    
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss')data_incpeut, to_char(data_sf,'dd-mm-yyyy hh:mi:ss')data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCPEUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Pantelimon Andreea             331CC      Lab1       05-03-2021 09:04:29 05-03-2021 09:04:52              0                                                                                             
+Pantelimon Andreea             331CC      Lab2       12-03-2021 08:22:55 12-03-2021 10:02:50            100                                                                                             
+Pantelimon Andreea             331CC      Lab3       19-03-2021 08:06:57 19-03-2021 10:13:01            126                                                                                             
+Pantelimon Andreea             331CC      Lab4       26-03-2021 08:06:36 26-03-2021 10:15:46            129                                                                                                                                                                                        
+
+SQL> spool off;

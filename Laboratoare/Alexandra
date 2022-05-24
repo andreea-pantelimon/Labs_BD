@@ -1,0 +1,139 @@
+Afisati, pentru toti angajatii care au salariul mai mare decat toti angajatii care fac parte din departamentul cu cei mai multi angajati veniti in firma in acelasi an:
+
+            a. Numele angajatului: NUME_ANG
+
+            b. Numele departamentului din care face parte angajatul: NUME_DEPT
+
+            d. Data angajarii: DATA_ANG
+
+            e. Anul angajarii: AN_ANG
+
+            f. Salariul angajatului: SAL_ANG
+
+Ordonati dupa numele departamentului si anul angajarii, crescator.
+
+Antentul listei este: NUME_ANG, NUME_DEPT, DATA_ANG, AN_ANG
+
+Pentru testare se va utiliza baza de date a userului scott, formata din tabelele EMP, DEPT si SALGRADE.
+
+Se vor incarca si rezolvarile etapelor/pasilor intermediari.
+
+
+
+
+
+
+
+-- pas 1 aflam departmentul cu cei mai multi angajati veniti in acelasi an
+
+-- nu stiu de ce nu mi da numarul departamnetului si mi da numarul de angajati..
+select max(count(empno))
+from emp c
+	join dept d1 on c.deptno = d1.deptno
+group by  c.deptno, extract(year from c.hiredate);
+
+
+-- pas 2 selectez salriul maxim pe acest departament
+-- calculam salriul maxim pe acel departament
+select max(a.sal)
+from emp a
+where a.deptno = (select max(count(*))
+from emp c
+group by  c.deptno, extract(year from c.hiredate));
+
+
+-- cererea finala
+--- am pus >= pentru ca zice doar mai mare, nu strict mai mare
+
+select e.ename as "NUME_ANG",
+	d.dname as "NUME_DEPT",
+	e.hiredate as "DATA_ANG",
+	extract(year from e.hiredate) as "AN_ANG",
+	e.sal as "SAL_ANG"
+from emp e
+	join dept d on e.deptno = d.deptno
+where e.sal >= (select max(a.sal)
+from emp a
+where a.deptno = (select max(count(*))
+from emp c
+group by  c.deptno, extract(year from c.hiredate)))
+order by 2, 4;
+
+
+-- metoda corectata
+
+-- pas 1 aflam departmentul cu cei mai multi angajati veniti in acelasi an
+
+-- nu stiu de ce nu mi da numarul departamnetului si mi da numarul de angajati..
+select max(count(empno)) Max
+from emp c
+	join emp c1 on c1.hiredate = c.hiredate
+	join dept d1 on c.deptno = d1.deptno
+group by  c.deptno, extract(year from c.hiredate);
+
+
+-- pas 2 selectez salriul maxim pe acest departament
+-- calculam salriul maxim pe acel departament
+select max(a.sal)
+from emp a
+where a.deptno = (select max(count(*))
+from emp c
+group by  c.deptno, extract(year from c.hiredate));
+
+
+-- cererea finala
+--- am pus >= pentru ca zice doar mai mare, nu strict mai mare
+
+select e.ename as "NUME_ANG",
+	d.dname as "NUME_DEPT",
+	e.hiredate as "DATA_ANG",
+	extract(year from e.hiredate) as "AN_ANG",
+	e.sal as "SAL_ANG"
+from emp e
+	join dept d on e.deptno = d.deptno
+where e.sal >= (select max(a.sal)
+from emp a
+where a.deptno = (select b.deptno
+from emp b, dept a
+where
+a.deptno = b.deptno
+group by b.deptno, extract(year from b.hiredate)
+having count() = (select max(count())
+                             from emp c
+                             where 
+                             group by  c.deptno, extract(year from c.hiredate));)
+order by 2, 4;
+
+
+select b.deptno
+from emp b, dept a
+where
+a.deptno = b.deptno
+group by b.deptno, extract(year from b.hiredate)
+having count(*) = (select max(count(*))
+                             from emp c
+                             where 
+                             group by  c.deptno, extract(year from c.hiredate));
+ aici e bine asa pasul 1
+
+
+
+
+select e.ename as "NUME_ANG",
+	d.dname as "NUME_DEPT",
+	e.hiredate as "DATA_ANG",
+	extract(year from e.hiredate) as "AN_ANG",
+	e.sal as "SAL_ANG"
+from emp e
+	join dept d on e.deptno = d.deptno
+where e.sal >= (select max(a.sal)
+from emp a
+where a.deptno = (select b.deptno
+from emp b, dept a
+where
+a.deptno = b.deptno
+group by b.deptno, extract(year from b.hiredate)
+having count() = (select max(count())
+                             from emp c
+                             group by c.deptno, extract(year from c.hiredate)))
+order by 2, 4;

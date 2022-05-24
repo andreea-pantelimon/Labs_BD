@@ -1,0 +1,17 @@
+select e.deptno, avg(all e.sal) Salariu
+from emp e
+group by e.deptno, e.sal
+having avg(all sal) < e.sal;
+
+
+select deptno, avg(sal)
+from emp
+group by deptno
+order by 1;
+
+select * from emp e
+where e.empno = (select
+max(count(empno))
+from emp b
+where e.deptno = b.deptno
+group by b.deptno);

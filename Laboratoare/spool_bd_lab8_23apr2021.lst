@@ -1,0 +1,534 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+23-04-2021 08:06:01                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values('Pantelimon Andreea', '331CC', 'Lab8', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Pantelimon Andreea             331CC      Lab5       SCOTT      02-APR-21 02-APR-21        117                                                                                                          
+Pantelimon Andreea             331CC      Lab7       SCOTT      16-APR-21 16-APR-21        109                                                                                                          
+Pantelimon Andreea             331CC      Lab1       SCOTT      05-MAR-21 05-MAR-21          0                                                                                                          
+Pantelimon Andreea             331CC      Lab6       SCOTT      09-APR-21 09-APR-21        109                                                                                                          
+Pantelimon Andreea             331CC      Lab8       SCOTT      23-APR-21                                                                                                                               
+Pantelimon Andreea             331CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        100                                                                                                          
+Pantelimon Andreea             331CC      Lab3       SCOTT      19-MAR-21 19-MAR-21        126                                                                                                          
+Pantelimon Andreea             331CC      Lab4       SCOTT      26-MAR-21 26-MAR-21        129                                                                                                            
+
+8 rows selected.
+
+SQL> select id_dep, nume, functie, salariu
+  2  from angajati
+  3  where salariu = (SELECT max(salariu) from angajati);
+
+    ID_DEP NUME                           FUNCTIE                 SALARIU                                                                                                                               
+---------- ------------------------------ -------------------- ----------                                                                                                                               
+        10 KING                           PRESIDENT                  5000                                                                                                                               
+
+SQL> select id_dep, nume, functie, salariu
+  2  from angajati
+  3  where not id_dep = 20 and
+  4  functie in (select functie from angajati where if_dep = 20)
+  5  order by functie;
+functie in (select functie from angajati where if_dep = 20)
+                                               *
+ERROR at line 4:
+ORA-00904: "IF_DEP": invalid identifier 
+
+
+SQL> select id_dep, nume, functie, salariu
+  2  from angajati
+  3  functie in (select functie from angajati where id_dep = 20)
+  4  order by functie;
+functie in (select functie from angajati where id_dep = 20)
+        *
+ERROR at line 3:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select id_dep, nume, functie, salariu
+  2  from angajati
+  3  functie IN(SELECT functie from angajati where id_dep = 20)
+  4* order by functie
+SQL> select id_dep, nume, functie, salariu
+  2  from angajati
+  3  functie IN(SELECT functie from angajati where id_dep = 20)
+  4  order by functie
+  5  /
+functie IN(SELECT functie from angajati where id_dep = 20)
+        *
+ERROR at line 3:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> edit
+Wrote file afiedt.buf
+
+  1  select id_dep, nume, functie, salariu
+  2  from angajati
+  3  where
+  4  not id_dep = 20 and
+  5  functie IN(SELECT functie from angajati where id_dep = 20)
+  6* order by functie
+SQL> select id_dep, nume, functie, salariu
+  2  from angajati
+  3  where
+  4  not id_dep = 20 and
+  5  functie IN(SELECT functie from angajati where id_dep = 20)
+  6  order by functie
+  7  /
+
+    ID_DEP NUME                           FUNCTIE                 SALARIU                                                                                                                               
+---------- ------------------------------ -------------------- ----------                                                                                                                               
+        30 JAMES                          CLERK                       950                                                                                                                               
+        10 MILLER                         CLERK                      1300                                                                                                                               
+        30 BLAKE                          MANAGER                    2850                                                                                                                               
+        10 CLARK                          MANAGER                    2450                                                                                                                               
+
+SQL> select nume,functie, data_ang
+  2  from angajati
+  3  where data_ang not in(select distinct(data_ang)
+  4  from angajati
+  5  where to_char(data_ang, 'MON') in ('DEC', 'JAN', 'FEB'))
+  6  order by nume;
+
+NUME                           FUNCTIE              DATA_ANG                                                                                                                                            
+------------------------------ -------------------- ---------                                                                                                                                           
+ADAMS                          CLERK                23-MAY-87                                                                                                                                           
+BLAKE                          MANAGER              01-MAY-81                                                                                                                                           
+CLARK                          MANAGER              09-JUN-81                                                                                                                                           
+JONES                          MANAGER              02-APR-81                                                                                                                                           
+KING                           PRESIDENT            17-NOV-81                                                                                                                                           
+MARTIN                         SALESMAN             28-SEP-81                                                                                                                                           
+SCOTT                          ANALYST              19-APR-87                                                                                                                                           
+TURNER                         SALESMAN             08-SEP-81                                                                                                                                           
+
+8 rows selected.
+
+SQL> select den_dep, nume, salariu
+  2  from angajati
+  3  natural join departamente
+  4  where salariu in
+  5  (select max(salariu)
+  6  from angajati
+  7  group by id_dep)
+  8  order by den_dep;
+
+DEN_DEP                        NUME                              SALARIU                                                                                                                                
+------------------------------ ------------------------------ ----------                                                                                                                                
+ACCOUNTING                     KING                                 5000                                                                                                                                
+Asigurarea calitatii           FORD                                 3000                                                                                                                                
+Asigurarea calitatii           SCOTT                                3000                                                                                                                                
+Proiectare Software            KING                                 5000                                                                                                                                
+RESEARCH                       SCOTT                                3000                                                                                                                                
+RESEARCH                       FORD                                 3000                                                                                                                                
+SALES                          BLAKE                                2850                                                                                                                                
+
+7 rows selected.
+
+SQL> select id_dep, nume, functie, data_ang
+  2  from angajati
+  3  where
+  4  (to_char(data_ang, 'yyyy'), functie) in
+  5  (select to_char(data_ang, 'yyyy'), functie
+  6  from angajati
+  7  where lower(nume) = 'jones');
+
+    ID_DEP NUME                           FUNCTIE              DATA_ANG                                                                                                                                 
+---------- ------------------------------ -------------------- ---------                                                                                                                                
+        20 JONES                          MANAGER              02-APR-81                                                                                                                                
+        30 BLAKE                          MANAGER              01-MAY-81                                                                                                                                
+        10 CLARK                          MANAGER              09-JUN-81                                                                                                                                
+
+SQL> select id_dep, nume, salariu
+  2  from angajati
+  3  where (id_dep, salariu+nvl(comision, 0)) in
+  4  (select id_dep, min(salariu+nvl(comision, 0))
+  5  from angajati
+  6  group by id_dep)
+  7  order by id_dep;
+
+    ID_DEP NUME                              SALARIU                                                                                                                                                    
+---------- ------------------------------ ----------                                                                                                                                                    
+        10 MILLER                               1300                                                                                                                                                    
+        20 SMITH                                 800                                                                                                                                                    
+        30 JAMES                                 950                                                                                                                                                    
+
+SQL> select nume, functie, data_ang, salariu
+  2  from angajati
+  3  where salariu >
+  4  (select max(salariu)
+  5  from angajati
+  6  where id_dep =
+  7  (select id_dep
+  8  from departamente
+  9  where lower(den_dep) = 'sales'));
+
+NUME                           FUNCTIE              DATA_ANG     SALARIU                                                                                                                                
+------------------------------ -------------------- --------- ----------                                                                                                                                
+JONES                          MANAGER              02-APR-81       2975                                                                                                                                
+SCOTT                          ANALYST              19-APR-87       3000                                                                                                                                
+KING                           PRESIDENT            17-NOV-81       5000                                                                                                                                
+FORD                           ANALYST              03-DEC-81       3000                                                                                                                                
+
+SQL> select a.id_dep, a.nume, a.functie, a.salariu
+  2  from angajati a
+  3  where
+  4  a.salariu > (select avg(b.salariu)
+  5  from angajati b
+  6  where b.id_dep = a.id_dep)
+  7  order by a.id_dep;
+
+    ID_DEP NUME                           FUNCTIE                 SALARIU                                                                                                                               
+---------- ------------------------------ -------------------- ----------                                                                                                                               
+        10 KING                           PRESIDENT                  5000                                                                                                                               
+        20 JONES                          MANAGER                    2975                                                                                                                               
+        20 FORD                           ANALYST                    3000                                                                                                                               
+        20 SCOTT                          ANALYST                    3000                                                                                                                               
+        30 ALLEN                          SALESMAN                   1600                                                                                                                               
+        30 BLAKE                          MANAGER                    2850                                                                                                                               
+
+6 rows selected.
+
+SQL> update angajati a
+  2  set(a.salariu, a.comision)=
+  3  (select a.salariu+avg(b.salariu)*0.1, avg(b.comision)
+  4  from angajati b
+  5  where b.id_dep = a.id_dep)
+  6  where data_ang <= '1-JUN-81';
+
+5 rows updated.
+
+SQL> select b.id_dep, a.den_dep, b.max_sal_dep
+  2  from departamente a,
+  3  (select id_dep, max(salariu) max_sal_dep
+  4  from angajati
+  5  group by id_dep) b
+  6  where a.id_dep = b.id_dep
+  7  order by b.id_dep;
+
+    ID_DEP DEN_DEP                        MAX_SAL_DEP                                                                                                                                                   
+---------- ------------------------------ -----------                                                                                                                                                   
+        10 ACCOUNTING                            5000                                                                                                                                                   
+        10 Proiectare Software                   5000                                                                                                                                                   
+        20 RESEARCH                            3192.5                                                                                                                                                   
+        20 Asigurarea calitatii                3192.5                                                                                                                                                   
+        30 SALES                              3006.67                                                                                                                                                   
+
+SQL> select b.id_dep, a.den_dep, b.max_sal_dep
+  2  from
+  3  departamente a inner join
+  4  (select id_dep, max(salariu) max_sal_dep
+  5  from angajati
+  6  group by id_dep) b
+  7  on a.id_dep = b.id_dep
+  8  order by b.id_dep;
+
+    ID_DEP DEN_DEP                        MAX_SAL_DEP                                                                                                                                                   
+---------- ------------------------------ -----------                                                                                                                                                   
+        10 ACCOUNTING                            5000                                                                                                                                                   
+        10 Proiectare Software                   5000                                                                                                                                                   
+        20 RESEARCH                            3192.5                                                                                                                                                   
+        20 Asigurarea calitatii                3192.5                                                                                                                                                   
+        30 SALES                              3006.67                                                                                                                                                   
+
+SQL> select * from angajati
+  2  ;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80     1017.5                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81    1756.67        550         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81    1406.67        550         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81     3192.5                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81    3006.67        550         30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+
+14 rows selected.
+
+SQL> select * from departamente
+  2  ;
+
+    ID_DEP DEN_DEP                        SEDIU                                                                                                                                                         
+---------- ------------------------------ --------------------                                                                                                                                          
+        10 ACCOUNTING                     NEW YORK                                                                                                                                                      
+        20 RESEARCH                       DALLAS                                                                                                                                                        
+        30 SALES                          CHICAGO                                                                                                                                                       
+        40 OPERATIONS                     BOSTON                                                                                                                                                        
+        10 Proiectare Software            3212121                                                                                                                                                       
+        20 Asigurarea calitatii           3212122                                                                                                                                                       
+
+6 rows selected.
+
+SQL> select
+  2  den_dep "Den_dep",
+  3  sal as "Sal_med_sefi",
+  4  a.nume "Nume_ang",
+  5  a.salariu "Salariu_ang"
+  6  from angajati a
+  7  natural join departamente
+  8  where
+  9  sal = select avg(salariu)
+ 10  from angajati
+ 11  where id_ang in (select id_sef from angajati)
+ 12  group by id_dep
+ 13  and
+ 14  a.salariu > (select avg(salariu)
+ 15  from angajati
+ 16  where id_ang in (select id_sef from angajati)
+ 17  group by id_dep) / 2;
+sal = select avg(salariu)
+      *
+ERROR at line 9:
+ORA-00936: missing expression 
+
+
+SQL> select
+  2  den_dep "Den_dep",
+  3  sal as "Sal_med_sefi",
+  4  a.nume "Nume_ang",
+  5  a.salariu "Salariu_ang"
+  6  from angajati a
+  7  natural join departamente
+  8  where
+  9  SET (sal) = (select avg(salariu)
+ 10  from angajati
+ 11  where id_ang in (select id_sef from angajati)
+ 12  group by id_dep)
+ 13  and
+ 14  a.salariu > (select avg(salariu)
+ 15  from angajati
+ 16  where id_ang in (select id_sef from angajati)
+ 17  group by id_dep) / 2;
+SET (sal) = (select avg(salariu)
+     *
+ERROR at line 9:
+ORA-00904: "SAL": invalid identifier 
+
+
+SQL> define sal
+SP2-0135: symbol sal is UNDEFINED
+SQL> select
+  2  den_dep "Den_dep",
+  3  sal as "Sal_med_sefi",
+  4  a.nume "Nume_ang",
+  5  a.salariu "Salariu_ang"
+  6  from angajati a
+  7  natural join departamente
+  8  where
+  9  SET (sal) = (select avg(salariu)
+ 10  from angajati
+ 11  where id_ang in (select id_sef from angajati)
+ 12  group by id_dep)
+ 13  and
+ 14  a.salariu > (select avg(salariu)
+ 15  from angajati
+ 16  where id_ang in (select id_sef from angajati)
+ 17  group by id_dep) / 2
+ 18  undefine sal;
+undefine sal
+*
+ERROR at line 18:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> define sal
+SP2-0135: symbol sal is UNDEFINED
+SQL> select
+  2  den_dep "Den_dep",
+  3  sal as "Sal_med_sefi",
+  4  a.nume "Nume_ang",
+  5  a.salariu "Salariu_ang"
+  6  from angajati a
+  7  natural join departamente
+  8  where
+  9  SET (sal) = (select avg(salariu)
+ 10  from angajati
+ 11  where id_ang in (select id_sef from angajati)
+ 12  group by id_dep)
+ 13  and
+ 14  a.salariu > (select avg(salariu)
+ 15  from angajati
+ 16  where id_ang in (select id_sef from angajati)
+ 17  group by id_dep) / 2;
+SET (sal) = (select avg(salariu)
+     *
+ERROR at line 9:
+ORA-00904: "SAL": invalid identifier 
+
+
+SQL> select
+  2  b.den_dep Den_dep,
+  3  (select round(avg(c.salariu) / 2, 0)
+  4  from (select distinct(q.id_ang), q.id_dep, q.salariu
+  5  from angajati q,
+  6  angajati e
+  7  where q.id_ang = e.id_def) c
+  8  where c.id_dep = a.id_dep) sal_med_sefi, a.nume Nume_ang, a.salariu salariu_ang
+  9  from angajati a
+ 10  departamente b
+ 11  where a.id_dep = b.id_dep and
+ 12  a.salariu > (select round(avg(c.salariu) / 2, 0)
+ 13  from (select distinct(q.id_ang), q.id_dep, q.salariu
+ 14  from angajati q,
+ 15  angajati e
+ 16  where q.id_ang = e.id_def) c
+ 17  where c.id_dep = a.id_dep);
+departamente b
+*
+ERROR at line 10:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> select
+  2  b.den_dep Den_dep,
+  3  (select round(avg(c.salariu) / 2, 0)
+  4  from (select distinct(q.id_ang), q.id_dep, q.salariu
+  5  from angajati q,
+  6  angajati e
+  7  where q.id_ang = e.id_def) c
+  8  where c.id_dep = a.id_dep) sal_med_sefi, a.nume Nume_ang, a.salariu salariu_ang
+  9  from angajati a,
+ 10  departamente b
+ 11  where a.id_dep = b.id_dep and
+ 12  a.salariu > (select round(avg(c.salariu) / 2, 0)
+ 13  from (select distinct(q.id_ang), q.id_dep, q.salariu
+ 14  from angajati q,
+ 15  angajati e
+ 16  where q.id_ang = e.id_def) c
+ 17  where c.id_dep = a.id_dep);
+where q.id_ang = e.id_def) c
+                 *
+ERROR at line 7:
+ORA-00904: "E"."ID_DEF": invalid identifier 
+
+
+SQL> select
+  2  b.den_dep Den_dep,
+  3  (select round(avg(c.salariu) / 2, 0)
+  4  from (select distinct(q.id_ang), q.id_dep, q.salariu
+  5  from angajati q,
+  6  angajati e
+  7  where q.id_ang = e.id_sef) c
+  8  where c.id_dep = a.id_dep) sal_med_sefi, a.nume Nume_ang, a.salariu salariu_ang
+  9  from angajati a,
+ 10  departamente b
+ 11  where a.id_dep = b.id_dep and
+ 12  a.salariu > (select round(avg(c.salariu) / 2, 0)
+ 13  from (select distinct(q.id_ang), q.id_dep, q.salariu
+ 14  from angajati q,
+ 15  angajati e
+ 16  where q.id_ang = e.id_def) c
+ 17  where c.id_dep = a.id_dep);
+where q.id_ang = e.id_def) c
+                 *
+ERROR at line 16:
+ORA-00904: "E"."ID_DEF": invalid identifier 
+
+
+SQL> select
+  2  b.den_dep Den_dep,
+  3  (select round(avg(c.salariu) / 2, 0)
+  4  from (select distinct(q.id_ang), q.id_dep, q.salariu
+  5  from angajati q,
+  6  angajati e
+  7  where q.id_ang = e.id_sef) c
+  8  where c.id_dep = a.id_dep) sal_med_sefi, a.nume Nume_ang, a.salariu salariu_ang
+  9  from angajati a,
+ 10  departamente b
+ 11  where a.id_dep = b.id_dep and
+ 12  a.salariu > (select round(avg(c.salariu) / 2, 0)
+ 13  from (select distinct(q.id_ang), q.id_dep, q.salariu
+ 14  from angajati q,
+ 15  angajati e
+ 16  where q.id_ang = e.id_sef) c
+ 17  where c.id_dep = a.id_dep);
+
+DEN_DEP                        SAL_MED_SEFI NUME_ANG                       SALARIU_ANG                                                                                                                  
+------------------------------ ------------ ------------------------------ -----------                                                                                                                  
+ACCOUNTING                             1863 CLARK                                 2450                                                                                                                  
+ACCOUNTING                             1863 KING                                  5000                                                                                                                  
+RESEARCH                               1532 JONES                               3192.5                                                                                                                  
+RESEARCH                               1532 SCOTT                                 3000                                                                                                                  
+RESEARCH                               1532 FORD                                  3000                                                                                                                  
+SALES                                  1503 ALLEN                              1756.67                                                                                                                  
+SALES                                  1503 BLAKE                              3006.67                                                                                                                  
+Proiectare Software                    1863 CLARK                                 2450                                                                                                                  
+Proiectare Software                    1863 KING                                  5000                                                                                                                  
+Asigurarea calitatii                   1532 JONES                               3192.5                                                                                                                  
+Asigurarea calitatii                   1532 SCOTT                                 3000                                                                                                                  
+Asigurarea calitatii                   1532 FORD                                  3000                                                                                                                  
+
+12 rows selected.
+
+SQL> update login_lab_bd set data_sf=sysdate where laborator='Lab8';
+
+1 row updated.
+
+SQL> update login_lab_bd set durata=round((data_sf-data_in)*24*60) where laborator='Lab8';
+
+1 row updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> slect instance_number, instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss') host_name from v$instance;
+SP2-0734: unknown command beginning "slect inst..." - rest of line ignored.
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput, to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Pantelimon Andreea             331CC      Lab5       02-04-2021 08:05:29 02-04-2021 10:02:05            117                                                                                             
+Pantelimon Andreea             331CC      Lab7       16-04-2021 08:05:24 16-04-2021 09:54:14            109                                                                                             
+Pantelimon Andreea             331CC      Lab1       05-03-2021 09:04:29 05-03-2021 09:04:52              0                                                                                             
+Pantelimon Andreea             331CC      Lab6       09-04-2021 08:08:53 09-04-2021 09:57:27            109                                                                                             
+Pantelimon Andreea             331CC      Lab8       23-04-2021 08:06:01 23-04-2021 09:54:52            109                                                                                             
+Pantelimon Andreea             331CC      Lab2       12-03-2021 08:22:55 12-03-2021 10:02:50            100                                                                                             
+Pantelimon Andreea             331CC      Lab3       19-03-2021 08:06:57 19-03-2021 10:13:01            126                                                                                             
+Pantelimon Andreea             331CC      Lab4       26-03-2021 08:06:36 26-03-2021 10:15:46            129                                                                                             
+Pantelimon Andreea             331CC      Lab4       26-03-2021 08:33:23 26-03-2021 10:15:46            102                                                                                             
+
+9 rows selected.
+
+SQL> select instance_number, instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss') host_name from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    HOST_NAME                                                                                                                                                              
+--------------- ---------------- -------------------                                                                                                                                                    
+              1 db19c            22-04-2021 03:25:51                                                                                                                                                    
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput, to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Pantelimon Andreea             331CC      Lab5       02-04-2021 08:05:29 02-04-2021 10:02:05            117                                                                                             
+Pantelimon Andreea             331CC      Lab7       16-04-2021 08:05:24 16-04-2021 09:54:14            109                                                                                             
+Pantelimon Andreea             331CC      Lab1       05-03-2021 09:04:29 05-03-2021 09:04:52              0                                                                                             
+Pantelimon Andreea             331CC      Lab6       09-04-2021 08:08:53 09-04-2021 09:57:27            109                                                                                             
+Pantelimon Andreea             331CC      Lab8       23-04-2021 08:06:01 23-04-2021 09:54:52            109                                                                                             
+Pantelimon Andreea             331CC      Lab2       12-03-2021 08:22:55 12-03-2021 10:02:50            100                                                                                             
+Pantelimon Andreea             331CC      Lab3       19-03-2021 08:06:57 19-03-2021 10:13:01            126                                                                                             
+Pantelimon Andreea             331CC      Lab4       26-03-2021 08:06:36 26-03-2021 10:15:46            129                                                                                                                                                                                        
+
+8 rows selected.
+
+SQL> spool off;
